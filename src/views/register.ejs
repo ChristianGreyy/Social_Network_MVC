@@ -1,0 +1,96 @@
+<%- include('./includes/head.ejs') %>
+    <style>
+        small {
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        p.post {
+            display: none;
+        }
+    </style>
+
+    </head>
+
+    <body>
+        <div class="www-layout">
+            <section>
+                <div class="gap no-gap signin whitish medium-opacity register">
+                    <div class="bg-image" style="background-image:url(/images/resources/theme-bg.jpg)"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="big-ad">
+                                    <figure><img src="/images/logo2.png" alt=""></figure>
+                                    <h1>Welcome to the Pitnik</h1>
+                                    <p>
+                                        Pitnik is a social network template that can be used to connect people. use this
+                                        template for multipurpose social activities like job, dating, posting, bloging
+                                        and much more. Now join & Make Cool Friends around the world !!!
+                                    </p>
+                                    <div class="barcode">
+                                        <figure><img src="/images/resources/Barcode.jpg" alt=""></figure>
+                                        <div class="app-download">
+                                            <span>Download Mobile App and Scan QR Code to login</span>
+                                            <ul class="colla-apps">
+                                                <li><a title="" href="https://play.google.com/store?hl=en"><img
+                                                            src="/images/android.png" alt="">android</a></li>
+                                                <li><a title="" href="https://www.apple.com/lae/ios/app-store/"><img
+                                                            src="/images/apple.png" alt="">iPhone</a></li>
+                                                <li><a title="" href="https://www.microsoft.com/store/apps"><img
+                                                            src="/images/windows.png" alt="">Windows</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4" style="display: flex; align-items: center; justify-content: center;">
+                                <div class="we-login-register">
+                                    <div class="form-title">
+                                        <i class="fa fa-key"></i>Sign Up
+                                        <span>Sign Up now and meet the awesome friends around the world.</span>
+                                    </div>
+                                    <form id="form-register" class="we-form" method="post">
+                                        <input id="firstName" name="firstName" type="text" placeholder="Tên">
+                                        <small id="firstName-error">Tên không hợp lệ</small>
+                                        <input id="lastName" name="lastName" type="text" placeholder="Họ">
+                                        <small id="lastName-error">Họ không hợp lệ</small>
+                                        <input id="email" name="email" type="text" placeholder="Email">
+                                        <small id="email-error">Email không hợp lệ</small>
+                                        <input id="password" name="password" type="password" placeholder="Password">
+                                        <small id="password-error">Mật khẩu phải chứa ít nhất 1 số, 1 chữ hoa và chũ
+                                            thường, và ít nhât 8 kí
+                                            tự trở lên</small>
+                                        <input id="phoneNumber" name="phoneNumber" type="text" placeholder="0842338169">
+                                        <small id="phoneNumber-error">Số điện thoại không hợp lệ</small>
+                                        <input type="checkbox"><label>Send code to Mobile</label>
+                                        <button type="submit" data-ripple="">Register</button>
+                                        <!-- <input style="width: 95px; height: 39px" type="submit" value="Register" /> -->
+                                        <a class="forgot underline" href="#" title="">forgot password?</a>
+                                    </form>
+                                    <a data-ripple="" title="" href="#" class="with-smedia facebook"><i
+                                            class="fa fa-facebook"></i></a>
+                                    <a data-ripple="" title="" href="#" class="with-smedia twitter"><i
+                                            class="fa fa-twitter"></i></a>
+                                    <a data-ripple="" title="" href="#" class="with-smedia instagram"><i
+                                            class="fa fa-instagram"></i></a>
+                                    <a data-ripple="" title="" href="#" class="with-smedia google"><i
+                                            class="fa fa-google-plus"></i></a>
+                                    <span>already have an account? <a class="we-account underline" href="/auth/login"
+                                            title="">Sign in</a></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </body>
+
+    </html>
+
+    <%- include('./includes/end.ejs') %>
+        <script src="/js/client/register.js"></script>
