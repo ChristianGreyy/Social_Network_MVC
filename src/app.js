@@ -31,7 +31,20 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "./public")));
 
 // set security HTTP headers
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: false,
+    directives: {
+      defaultSrc: ["'self'", "https: *"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https: *"],
+      objectSrc: ["'none'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https: *"],
+      fontSrc: ["'self'", "'unsafe-inline'", "https: *"],
+      imgSrc: ["'self'", "https: *", "data:", "blob:"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
 
 // parse json request body
 app.use(express.json());

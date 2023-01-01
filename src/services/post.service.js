@@ -2,6 +2,7 @@ const httpStatus = require("http-status");
 const { Post } = require("../models");
 const ApiError = require("../utils/ApiError");
 const slugify = require("slugify");
+const commentService = require("./comment.service");
 
 /**
  * Create a post
@@ -9,7 +10,13 @@ const slugify = require("slugify");
  * @returns {Promise<Post>}
  */
 const createPost = async (postBody) => {
-  return Post.create(postBody);
+  let newPost = await Post.create(postBody);
+  newPost = await Post.paginateAggregrate(
+    { _id: newPost._id.toString() },
+    { populatePk: "users.author" }
+  );
+  console.log(newPost);
+  return newPost;
 };
 
 /**
@@ -22,7 +29,8 @@ const createPost = async (postBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryPosts = async (filter, options) => {
-  const posts = await Post.paginate(filter, options);
+  const posts = await Post.paginateAggregrate(filter, options);
+
   return posts;
 };
 
@@ -50,17 +58,15 @@ const getPostByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Post>}
  */
-const updatePostById = async (userId, updateBody) => {
-  const user = await getPostById(userId);
-  if (!user) {
+const updatePostById = async (postId, updateBody) => {
+  const post = await getPostById(postId);
+  if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, "Post not found");
   }
-  if (updateBody.email && (await Post.isEmailTaken(updateBody.email, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  Object.assign(post, updateBody);
+  await post.save();
+  return post;
 };
 
 /**

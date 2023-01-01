@@ -7,7 +7,7 @@ const createPost = {
       content: Joi.string(),
       photo: Joi.string(),
       video: Joi.string(),
-      author: Joi.string().required(),
+      author: Joi.string(),
     })
     .min(1),
 };
@@ -15,8 +15,8 @@ const createPost = {
 const getPosts = {
   query: Joi.object().keys({
     content: Joi.string(),
-    author: Joi.string(),
-    slug: Joi.string(),
+    author: Joi.string().custom(objectId),
+    friends: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -35,9 +35,15 @@ const updatePost = {
   }),
   body: Joi.object()
     .keys({
+      id: Joi.required().custom(objectId),
+      author: Joi.required().custom(objectId),
       content: Joi.string(),
       photo: Joi.string(),
       video: Joi.string(),
+      likes: Joi.array().items(Joi.custom(objectId)),
+      shares: Joi.array().items(Joi.custom(objectId)),
+      createdAt: Joi.string(),
+      updatedAt: Joi.string(),
     })
     .min(1),
 };

@@ -20,6 +20,17 @@ const commentSchema = mongoose.Schema(
       ref: "Post",
       required: true,
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
+    belong: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
   },
   {
     timestamps: true,
@@ -30,6 +41,6 @@ const commentSchema = mongoose.Schema(
 commentSchema.plugin(toJSON);
 commentSchema.plugin(paginate);
 
-const Like = mongoose.model("Like", commentSchema);
+const Like = mongoose.model("Comment", commentSchema);
 
 module.exports = Like;

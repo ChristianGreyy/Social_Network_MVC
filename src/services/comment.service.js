@@ -1,19 +1,21 @@
 const httpStatus = require("http-status");
-const { Comment } = require("../models");
+const { Comment, Post } = require("../models");
+const { postService } = require("../services");
 const ApiError = require("../utils/ApiError");
 const slugify = require("slugify");
 
 /**
- * Create a post
- * @param {Object} postBody
+ * Create a comment
+ * @param {Object} commentBody
  * @returns {Promise<Comment>}
  */
-const createComment = async (postBody) => {
-  return Comment.create(postBody);
+const createComment = async (commentBody) => {
+  const newComment = await Comment.create(commentBody);
+  return newComment;
 };
 
 /**
- * Query for posts
+ * Query for comments
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -22,8 +24,8 @@ const createComment = async (postBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryComments = async (filter, options) => {
-  const posts = await Comment.paginate(filter, options);
-  return posts;
+  const comments = await Comment.paginate(filter, options);
+  return comments;
 };
 
 /**

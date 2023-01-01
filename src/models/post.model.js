@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const { toJSON, paginate } = require("./plugins");
+const { toJSON, paginate, paginateAggregrate } = require("./plugins");
 const { roles } = require("../config/roles");
 
 const postSchema = mongoose.Schema(
@@ -16,9 +16,31 @@ const postSchema = mongoose.Schema(
       type: String,
     },
     author: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
+    // comments: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Comment",
+    //     required: true,
+    //   },
+    // ],
+    shares: [
+      {
+        type: String,
+        ref: "User",
+        required: true,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -27,7 +49,7 @@ const postSchema = mongoose.Schema(
 
 // add plugin that converts mongoose to json
 postSchema.plugin(toJSON);
-postSchema.plugin(paginate);
+postSchema.plugin(paginateAggregrate);
 
 /**
  * @typedef User

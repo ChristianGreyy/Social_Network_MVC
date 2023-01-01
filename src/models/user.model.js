@@ -74,10 +74,17 @@ const userSchema = mongoose.Schema(
     background: {
       type: String,
     },
-    friends: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+    friends: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        status: {
+          enum: ["friend", "stranger"],
+        },
+      },
+    ],
     gender: {
       type: String,
     },

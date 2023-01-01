@@ -59,11 +59,11 @@
                     </div>
 
                     <div class="author-content">
-                        <a class="h4 author-name" href="/user/<%= user.slug %>/about">
-                            <%= user.firstName + ' ' + user.lastName %>
+                        <a class="h4 author-name" href="/user/<%= remoteUser.slug %>/about">
+                            <%= remoteUser.firstName + ' ' + remoteUser.lastName %>
                         </a>
                         <div class="country">
-                            <%= user.address %>
+                            <%= remoteUser.address %>
                         </div>
                     </div>
                 </div>
@@ -72,22 +72,22 @@
                 <ul class="profile-menu">
                     <li>
                         <a class="<%= heading == 'Timeline' ? 'active' : '' %>"
-                            href="/user/<%= user.slug %>/">Timeline</a>
+                            href="/user/<%= remoteUser.slug %>/">Timeline</a>
                     </li>
                     <li>
                         <a class="<%= heading == 'About' ? 'active' : '' %>"
-                            href="/user/<%= user.slug %>/about">About</a>
+                            href="/user/<%= remoteUser.slug %>/about">About</a>
                     </li>
                     <li>
-                        <a class="<%= heading == 'Friends' ? 'active' : '' %>"" href=" /user/<%=user.slug
+                        <a class="<%= heading == 'Friends' ? 'active' : '' %>"" href=" /user/<%=remoteUser.slug
                             %>/friends">Friends</a>
                     </li>
                     <li>
-                        <a class="<%= heading == 'Photos' ? 'active' : '' %>"" href=" /user/<%=user.slug
+                        <a class="<%= heading == 'Photos' ? 'active' : '' %>"" href=" /user/<%=remoteUser.slug
                             %>/photos">Photos</a>
                     </li>
                     <li>
-                        <a class="<%= heading == 'Videos' ? 'active' : '' %>"" href=" /user/<%=user.slug
+                        <a class="<%= heading == 'Videos' ? 'active' : '' %>"" href=" /user/<%=remoteUser.slug
                             %>/videos">Videos</a>
                     </li>
                     <li>

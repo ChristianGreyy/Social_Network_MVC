@@ -1,43 +1,41 @@
 const express = require("express");
 const auth = require("../../middlewares/auth");
 const validate = require("../../middlewares/validate");
-const postValidation = require("../../validations/post.validation");
-const postController = require("../../controllers/api/post.controller");
-const upload = require("../../config/multer");
+const commentValidation = require("../../validations/comment.validation");
+const commentController = require("../../controllers/api/comment.controller");
+
 const router = express.Router();
-const { getFriendId } = require("../../middlewares/post.middleware");
 
 router
   .route("/")
   .post(
     auth(),
-    // validate(postValidation.createPost),
-    upload.single("photo"),
-    postController.createPost
+    auth(),
+    validate(commentValidation.createComment),
+    commentController.createComment
   )
   .get(
-    // auth("getPosts"),
-    // validate(postValidation.getPosts),
-    // getFriendId,
-    postController.getPosts
+    auth(),
+    validate(commentValidation.getComments),
+    commentController.getComments
   );
 
 router
-  .route("/:postId")
+  .route("/:commentId")
   .get(
-    // auth("getPosts"),
-    validate(postValidation.getPost),
-    postController.getPost
+    // auth("getComments"),
+    validate(commentValidation.getComment),
+    commentController.getComment
   )
   .patch(
-    // auth("managePosts"),
-    validate(postValidation.updatePost),
-    postController.updatePost
+    // auth("manageComments"),
+    validate(commentValidation.updateComment),
+    commentController.updateComment
   )
   .delete(
-    // auth("managePosts"),
-    validate(postValidation.deletePost),
-    postController.deletePost
+    // auth("manageComments"),
+    validate(commentValidation.deleteComment),
+    commentController.deleteComment
   );
 
 module.exports = router;
@@ -45,17 +43,17 @@ module.exports = router;
 /**
  * @swagger
  * tags:
- *   name: Posts
- *   description: Post management and retrieval
+ *   name: Comments
+ *   description: Comment management and retrieval
  */
 
 /**
  * @swagger
- * /posts:
+ * /comments:
  *   post:
- *     summary: Create a post
- *     description: Only admins can create other posts.
- *     tags: [Posts]
+ *     summary: Create a comment
+ *     description: Only admins can create other comments.
+ *     tags: [Comments]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -83,19 +81,19 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [post, admin]
+ *                  enum: [comment, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: post
+ *               role: comment
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Post'
+ *                $ref: '#/components/schemas/Comment'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -104,9 +102,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all posts
- *     description: Only admins can retrieve all posts.
- *     tags: [Posts]
+ *     summary: Get all comments
+ *     description: Only admins can retrieve all comments.
+ *     tags: [Comments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -114,12 +112,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: Post name
+ *         description: Comment name
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: Post role
+ *         description: Comment role
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -131,7 +129,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of posts
+ *         description: Maximum number of comments
  *       - in: query
  *         name: page
  *         schema:
@@ -150,7 +148,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Post'
+ *                     $ref: '#/components/schemas/Comment'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -171,11 +169,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /posts/{id}:
+ * /comments/{id}:
  *   get:
- *     summary: Get a post
- *     description: Logged in posts can fetch only their own post information. Only admins can fetch other posts.
- *     tags: [Posts]
+ *     summary: Get a comment
+ *     description: Logged in comments can fetch only their own comment information. Only admins can fetch other comments.
+ *     tags: [Comments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -184,14 +182,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Post id
+ *         description: Comment id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Post'
+ *                $ref: '#/components/schemas/Comment'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -200,9 +198,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a post
- *     description: Logged in posts can only update their own information. Only admins can update other posts.
- *     tags: [Posts]
+ *     summary: Update a comment
+ *     description: Logged in comments can only update their own information. Only admins can update other comments.
+ *     tags: [Comments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -211,7 +209,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Post id
+ *         description: Comment id
  *     requestBody:
  *       required: true
  *       content:
@@ -240,7 +238,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Post'
+ *                $ref: '#/components/schemas/Comment'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -251,9 +249,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a post
- *     description: Logged in posts can delete only themselves. Only admins can delete other posts.
- *     tags: [Posts]
+ *     summary: Delete a comment
+ *     description: Logged in comments can delete only themselves. Only admins can delete other comments.
+ *     tags: [Comments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -262,7 +260,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Post id
+ *         description: Comment id
  *     responses:
  *       "200":
  *         description: No content

@@ -1,109 +1,34 @@
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const logger = require("./logger");
-const { commentService } = require("../services");
-
-const { createServer } = require("https");
-
-const { readFileSync } = require("fs");
-const { resolve } = require("path");
-const { nanoid } = require("nanoid");
-const authSocket = require("../middlewares/authSocket");
-const c = require("config");
+const config = require("./config");
 
 let io;
 
-const existSocketId = [];
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-}
-
-const handleJsonMessage = (socket, jsonMessage) => {
-  switch (jsonMessage.action) {
-    case "start":
-      existSocketId.push(socket.id);
-      console.log(existSocketId);
-      emitMessage(socket, { action: "start", id: socket.id });
-      break;
-    default:
-      let remotePeerSocket;
-      if (!jsonMessage.data.remoteId) {
-        let randomIndex = getRandomInt(0, existSocketId.length - 1);
-      } else {
-        remotePeerSocket = getSocketById(socket, jsonMessage.data.remoteId);
-        if (!remotePeerSocket) {
-          return console.log(
-            "failed to find remote socket with id",
-            jsonMessage.data.remoteId
-          );
-        }
-      }
-      // console.log(remotePeerSocket
-      if (jsonMessage.action !== "offer") {
-        delete jsonMessage.data.remoteId;
-      } else {
-        jsonMessage.data.remoteId = socket.id;
-      }
-
-      emitMessage(remotePeerSocket, jsonMessage);
-  }
-};
-
-const emitMessage = (socket, jsonMessage) => {
-  // console.log(JSON.stringify(jsonMessage));
-  socket.emit("server-to-client", JSON.stringify(jsonMessage));
-};
-
-const getSocketById = (socket, socketId) => {
-  const arr = io.sockets.sockets;
-  let ans;
-  arr.forEach((item) => {
-    if (item.id == socketId) {
-      ans = item;
-    }
-  });
-  return ans;
-};
-
 module.exports = {
   init: (app) => {
-    const httpServer = createServer(
-      {
-        cert: readFileSync(resolve(__dirname, "../ssl/cert.pem")),
-        key: readFileSync(resolve(__dirname, "../ssl/cert.key")),
-      },
-      app
-    );
-    // const httpServer = createServer(app);
+    const httpServer = createServer(app);
+
     io = new Server(httpServer, {
       cors: {
-        origin: "*",
+        origin: "https://localhost:8080",
+        credentials: true,
       },
-      transports: ["polling"],
-      maxHttpBufferSize: 8e6,
     });
 
     io.on("connection", (socket) => {
-      socket.on("message", (data) => {
-        console.log("socket::message data=%s", data);
-
-        try {
-          const jsonMessage = JSON.parse(data);
-          handleJsonMessage(socket, jsonMessage);
-        } catch (error) {
-          console.error("failed to handle onmessage", error);
-        }
-      });
+      console.log("user connection");
 
       socket.once("close", () => {
         console.log("socket::close");
       });
+      socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
     });
 
-    httpServer.listen(8080, () => {
-      console.log("app server listening on port 8080");
+    httpServer.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
     });
   },
   getIo: () => {

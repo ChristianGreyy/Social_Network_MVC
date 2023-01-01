@@ -34,7 +34,7 @@ const loginUserWithEmailAndPassword = async (email, password, req, res) => {
     expires: new Date(
       Date.now() + config.jwt.cookieExpiration * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
+    // httpOnly: true,
     secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   });
 

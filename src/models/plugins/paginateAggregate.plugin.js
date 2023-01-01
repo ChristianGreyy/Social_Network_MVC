@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 /* eslint-disable no-param-reassign */
 
 const paginate = (schema) => {
@@ -19,17 +20,15 @@ const paginate = (schema) => {
    * @param {number} [options.page] - Current page (default = 1)
    * @returns {Promise<QueryResult>}
    */
-  schema.statics.paginate = async function (filter, options) {
-    let sort = "";
+  schema.statics.paginateAggregrate = async function (filter, options) {
+    let sort = {};
     if (options.sortBy) {
-      const sortingCriteria = [];
       options.sortBy.split(",").forEach((sortOption) => {
         const [key, order] = sortOption.split(":");
-        sortingCriteria.push((order === "desc" ? "-" : "") + key);
+        sort[key] = order === "desc" ? -1 : 1;
       });
-      sort = sortingCriteria.join(" ");
     } else {
-      sort = "createdAt";
+      sort["createdAt"] = 1;
     }
 
     const limit =
@@ -43,18 +42,49 @@ const paginate = (schema) => {
     const skip = (page - 1) * limit;
 
     const countPromise = this.countDocuments(filter).exec();
-    let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
+    // let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
+    for (let i in filter) {
+      if (filter[i].match(/^[0-9a-fA-F]{24}$/)) {
+        filter[i] = mongoose.Types.ObjectId(filter[i]);
+      }
+    }
 
-    if (options.populate) {
-      options.populate.split(",").forEach((populateOption) => {
-        docsPromise = docsPromise.populate(
-          populateOption
-            .split(".")
-            .reverse()
-            .reduce((a, b) => ({ path: b, populate: a }))
-        );
+    let queryArray = [
+      { $match: filter },
+      { $sort: sort },
+      { $skip: skip },
+      { $limit: limit },
+    ];
+
+    if (options.populateFk) {
+      options.populateFk.split(",").forEach((populateOption) => {
+        const [collection, field] = populateOption.split(".");
+        queryArray.push({
+          $lookup: {
+            from: collection,
+            localField: "_id",
+            foreignField: field,
+            as: collection,
+          },
+        });
       });
     }
+
+    if (options.populatePk) {
+      options.populatePk.split(",").forEach((populateOption) => {
+        const [collection, field] = populateOption.split(".");
+        queryArray.push({
+          $lookup: {
+            from: collection,
+            localField: field,
+            foreignField: "_id",
+            as: field,
+          },
+        });
+      });
+    }
+
+    let docsPromise = this.aggregate(queryArray);
 
     docsPromise = docsPromise.exec();
 

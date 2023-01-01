@@ -10,7 +10,6 @@ const verifyCallback =
         new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate")
       );
     }
-    console.log(user);
     req.user = user;
 
     if (requiredRights.length) {
@@ -29,7 +28,6 @@ const verifyCallback =
 const auth =
   (...requiredRights) =>
   async (req, res, next) => {
-    console.log(req.header("authorization"));
     return new Promise((resolve, reject) => {
       passport.authenticate(
         "jwt",
