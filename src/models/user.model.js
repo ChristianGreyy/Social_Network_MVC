@@ -69,7 +69,7 @@ const userSchema = mongoose.Schema(
     avatar: {
       type: String,
       required: true,
-      default: "/resources/avatar/default.jpg",
+      default: "/resources/background/default.jpeg",
     },
     background: {
       type: String,
@@ -82,6 +82,7 @@ const userSchema = mongoose.Schema(
         },
         status: {
           enum: ["friend", "stranger"],
+          type: String,
         },
       },
     ],
@@ -115,12 +116,6 @@ const userSchema = mongoose.Schema(
     work: {
       type: String,
     },
-    friends: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,

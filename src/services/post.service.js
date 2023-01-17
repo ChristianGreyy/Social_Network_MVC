@@ -15,7 +15,6 @@ const createPost = async (postBody) => {
     { _id: newPost._id.toString() },
     { populatePk: "users.author" }
   );
-  console.log(newPost);
   return newPost;
 };
 
@@ -29,7 +28,12 @@ const createPost = async (postBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryPosts = async (filter, options) => {
-  const posts = await Post.paginateAggregrate(filter, options);
+  let posts;
+  if (filter["author"]) {
+    posts = await Post.paginateAggregrate(filter, options);
+  } else {
+    posts = await Post.paginateAggregrate(filter, options);
+  }
 
   return posts;
 };

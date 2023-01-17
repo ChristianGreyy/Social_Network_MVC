@@ -20,18 +20,18 @@ jQuery(document).ready(function ($) {
   // popup end
 
   //------- Notifications Dropdowns
-  $(".top-area > .setting-area > li > a").on("click", function () {
-    var $parent = $(this).parent("li");
-    $(this)
-      .addClass("active")
-      .parent()
-      .siblings()
-      .children("a")
-      .removeClass("active");
-    $parent.siblings().children("div").removeClass("active");
-    $(this).siblings("div").toggleClass("active");
-    return false;
-  });
+  // $(".top-area > .setting-area > li > a").on("click", function () {
+  //   var $parent = $(this).parent("li");
+  //   $(this)
+  //     .addClass("active")
+  //     .parent()
+  //     .siblings()
+  //     .children("a")
+  //     .removeClass("active");
+  //   $parent.siblings().children("div").removeClass("active");
+  //   $(this).siblings("div").toggleClass("active");
+  //   return false;
+  // });
 
   $("body *")
     .not(".top-area > .setting-area > li > a")

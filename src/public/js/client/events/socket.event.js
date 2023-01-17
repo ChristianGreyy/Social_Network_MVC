@@ -37,6 +37,7 @@ socket.off("getComments").on("getComments", (comment) => {
 // POST
 
 socket.on("getNewPost", (newPost) => {
+  console.log(newPost.results[0].author[0].slug);
   if (
     window.location.href.includes(newPost.results[0].author[0].slug) ||
     window.location.href == "http://localhost:8080/"
@@ -60,13 +61,15 @@ socket.on("getNewPost", (newPost) => {
 });
 
 socket.on("getUpdatedPost", (newPost) => {
-  console.log(newPost);
   let userPost = $("input.postId[value='" + newPost.id + "']").closest(
     ".user-post"
   );
+  // update like of post
   $(userPost)
     .find(".post-meta")
     .find(".likes")
     .find("span")
     .text(newPost.likes.length);
 });
+
+socket.on("msg", (value) => [console.log(value)]);

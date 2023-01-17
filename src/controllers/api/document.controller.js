@@ -1,44 +1,46 @@
-const fs = require("fs");
-const path = require("path");
-const fse = require("fs-extra");
-const xml2js = require("xml2js");
-const unzipper = require("unzipper");
+const httpStatus = require("http-status");
+const pick = require("../../utils/pick");
+const ApiError = require("../../utils/ApiError");
 const catchAsync = require("../../utils/catchAsync");
+const socket = require("../../config/socket");
 
-exports.createDocument = catchAsync(async (req, res, next) => {
-  var dir = path.join(
-    __dirname,
-    "../public/uploads/xml",
-    req.file.filename.split(".zip")[0]
-  );
-
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  await fs
-    .createReadStream(req.file.path)
-    .pipe(
-      unzipper.Extract({
-        path: path.join(
-          __dirname,
-          "../public/uploads/xml",
-          req.file.filename.split(".zip")[0]
-        ),
-      })
-    )
-    .promise();
-
-  console.log(req.file);
-
-  const document = new Document({
-    fileName: req.file.filename.split(".zip")[0],
-    path: dir + "/word/document.xml",
-    ext: req.file.originalname.split(".")[1],
-  });
-
-  const newDocument = await document.save();
-  return res.json({
-    newDocument,
-  });
+const createDocument = catchAsync(async (req, res) => {
+  const document = await documentService.createDocument(req.body);
+  res.status(httpStatus.CREATED).send(document);
 });
+
+const getDocuments = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ["post"]);
+  const options = pick(req.query, ["sortBy", "limit", "page", "populate"]);
+  const result = await documentService.queryDocuments(filter, options);
+  res.send(result);
+});
+
+const getDocument = catchAsync(async (req, res) => {
+  const document = await documentService.getDocumentById(req.params.documentId);
+  if (!document) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Document not found");
+  }
+  res.send(document);
+});
+
+const updateDocument = catchAsync(async (req, res) => {
+  const document = await documentService.updateDocumentById(
+    req.params.documentId,
+    req.body
+  );
+  res.send(document);
+});
+
+const deleteDocument = catchAsync(async (req, res) => {
+  await documentService.deleteDocumentById(req.params.documentId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+module.exports = {
+  createDocument,
+  getDocuments,
+  getDocument,
+  updateDocument,
+  deleteDocument,
+};

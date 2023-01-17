@@ -4,6 +4,7 @@ const logger = require("./logger");
 const config = require("./config");
 
 let io;
+let onlineUsers = [];
 
 module.exports = {
   init: (app) => {
@@ -18,6 +19,23 @@ module.exports = {
 
     io.on("connection", (socket) => {
       console.log("user connection");
+      // console.log("online user: " + onlineUsers);
+
+      socket.on("addOnlineUser", (user) => {
+        const index = onlineUsers.findIndex(
+          (onlineUser) => onlineUser.userId == user.id
+        );
+        if (index == -1) {
+          socket.join(socket.id);
+          onlineUsers.push({
+            socketId: socket.id,
+            userId: user.id,
+          });
+          console.log(socket.id);
+        }
+      });
+
+      console.log("onlineUsers", onlineUsers);
 
       socket.once("close", () => {
         console.log("socket::close");
@@ -33,5 +51,8 @@ module.exports = {
   },
   getIo: () => {
     return io;
+  },
+  getOnlineUser: () => {
+    return onlineUsers;
   },
 };

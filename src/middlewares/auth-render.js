@@ -3,23 +3,48 @@ const { promisify } = require("util");
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, Token } = require("../models");
 const ApiError = require("../utils/ApiError");
+const { tokenService } = require("../services");
+const { tokenTypes } = require("../config/tokens");
 
 exports.authRender = catchAsync(async (req, res, next) => {
   let token;
   if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  console.log(token);
+
+  // Check token doc is in client?
   if (!token) {
-    return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+    return res.redirect("/auth/login");
+    // return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
   }
-  const decoded = await promisify(jwt.verify)(token, config.jwt.secret);
-  // console.log(decoded);
-  const currentUser = await User.findById(decoded.sub);
+  let payload;
+  try {
+    payload = await promisify(jwt.verify)(token, config.jwt.secret);
+  } catch (err) {
+    return res.redirect("/auth/login");
+  }
+
+  // Check token doc is in database?
+  const tokenDoc = await Token.findOne({
+    token,
+    type: tokenTypes.REFRESH,
+    user: payload.sub,
+    blacklisted: false,
+  });
+  if (!tokenDoc) {
+    return res.redirect("/auth/login");
+  }
+
+  // console.log(payload);
+  const currentUser = await User.findById(payload.sub).select(
+    "-isEmailVerified"
+  );
+  // Check user exists?
   if (!currentUser) {
-    return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+    // return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+    return res.redirect("/auth/login");
   }
 
   res.locals.user = currentUser;

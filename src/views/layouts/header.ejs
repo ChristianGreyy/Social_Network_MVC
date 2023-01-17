@@ -21,14 +21,17 @@
         </div>
         <ul class="setting-area">
             <li><a href="/" title="Home" data-ripple=""><i class="fa fa-home"></i></a></li>
-            <li>
+            <li class="friend-requests-item">
                 <a href="#" title="Friend Requests" data-ripple="">
-                    <i class="fa fa-user"></i><em class="bg-red">5</em>
+                    <i class="fa fa-user"></i><em class="bg-red">
+                        <%= user.friends.filter(friend=> friend.status == 'stranger').length %>
+                    </em>
                 </a>
                 <div class="dropdowns">
                     <span>5 New Requests <a href="#" title="">View all Requests</a></span>
                     <ul class="drops-menu">
-                        <li>
+                        <!-- Data render here -->
+                        <!-- <li>
                             <div>
                                 <figure>
                                     <img src="/images/resources/thumb-2.jpg" alt="">
@@ -43,8 +46,8 @@
                                     <a href="#" title=""><i class="fa fa-trash"></i></a>
                                 </div>
                             </div>
-                        </li>
-                        <li>
+                        </li> -->
+                        <!-- <li>
                             <div>
                                 <figure>
                                     <img src="/images/resources/thumb-3.jpg" alt="">
@@ -107,12 +110,12 @@
                                     <a href="#" title=""><i class="fa fa-trash"></i></a>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                     <a href="friend-requests.html" title="" class="more-mesg">View All</a>
                 </div>
             </li>
-            <li>
+            <li class="notification-item">
                 <a href="#" title="Notification" data-ripple="">
                     <i class="fa fa-bell"></i><em class="bg-purple">7</em>
                 </a>
@@ -200,7 +203,7 @@
                     <a href="notifications.html" title="" class="more-mesg">View All</a>
                 </div>
             </li>
-            <li>
+            <li class="message-item">
                 <a href="#" title="Messages" data-ripple=""><i class="fa fa-commenting"></i><em
                         class="bg-blue">9</em></a>
                 <div class="dropdowns">
@@ -582,11 +585,11 @@
                 </ul>
                 <span class="seting-title">User setting <a href="#" title="">see all</a></span>
                 <ul class="log-out">
-                    <li><a href="/user/<%= user.slug %>/about" title=""><i class="ti-user"></i> view profile</a></li>
+                    <li><a href="/user/<%= user.slug %>" title=""><i class="ti-user"></i> view profile</a></li>
                     <li><a href="setting.html" title=""><i class="ti-pencil-alt"></i>edit profile</a></li>
                     <li><a href="#" title=""><i class="ti-target"></i>activity log</a></li>
                     <li><a href="setting.html" title=""><i class="ti-settings"></i>account setting</a></li>
-                    <li><a href="logout.html" title=""><i class="ti-power-off"></i>log out</a></li>
+                    <li><a id="logout" href="logout.html" title=""><i class="ti-power-off"></i>log out</a></li>
                 </ul>
             </div>
         </div>

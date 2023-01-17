@@ -3,6 +3,11 @@ const auth = require("../../middlewares/auth");
 const validate = require("../../middlewares/validate");
 const userValidation = require("../../validations/user.validation");
 const userController = require("../../controllers/api/user.controller");
+const {
+  apiGetRequestfriend,
+  apiGetfriend,
+  apiGetOnlinefriend,
+} = require("../../middlewares/user.middleware");
 
 const router = express.Router();
 
@@ -14,8 +19,11 @@ router
     userController.createUser
   )
   .get(
-    auth("getUsers"),
+    auth(),
     validate(userValidation.getUsers),
+    apiGetRequestfriend,
+    apiGetfriend,
+    apiGetOnlinefriend,
     userController.getUsers
   );
 

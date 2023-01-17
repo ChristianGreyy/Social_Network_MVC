@@ -15,7 +15,9 @@ const createPost = {
 const getPosts = {
   query: Joi.object().keys({
     content: Joi.string(),
-    author: Joi.string().custom(objectId),
+    author: Joi.string(),
+    populateFk: Joi.string(),
+    populatePk: Joi.string(),
     friends: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),

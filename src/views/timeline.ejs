@@ -724,7 +724,7 @@
 												</div><!-- sidebar -->
 												<div class="col-lg-6">
 													<!-- Create post -->
-													<% if(user._id==remoteUser.id) { %>
+													<% if(user._id.toString()==remoteUser.id.toString()) { %>
 														<div class="central-meta postbox">
 															<span class="create-post">Create post</span>
 															<div class="new-postbox">

@@ -10,7 +10,6 @@ router
   .route("/")
   .post(
     auth(),
-    auth(),
     validate(commentValidation.createComment),
     commentController.createComment
   )

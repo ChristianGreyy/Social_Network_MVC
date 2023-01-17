@@ -8,6 +8,14 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const logout = catchAsync(async (req, res) => {
+  res.render("logout", {
+    title: "Đăng xuất",
+    user: "",
+    heading: "Logout",
+  });
+});
+
 const register = catchAsync(async (req, res) => {
   res.render("register", {
     title: "Đăng ký",
@@ -30,6 +38,7 @@ const resetPassword = catchAsync(async (req, res) => {
 
 module.exports = {
   login,
+  logout,
   register,
   forgot,
   resetPassword,

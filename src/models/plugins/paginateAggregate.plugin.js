@@ -34,7 +34,7 @@ const paginate = (schema) => {
     const limit =
       options.limit && parseInt(options.limit, 10) > 0
         ? parseInt(options.limit, 10)
-        : 10;
+        : 100;
     const page =
       options.page && parseInt(options.page, 10) > 0
         ? parseInt(options.page, 10)
@@ -44,18 +44,19 @@ const paginate = (schema) => {
     const countPromise = this.countDocuments(filter).exec();
     // let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
     for (let i in filter) {
-      if (filter[i].match(/^[0-9a-fA-F]{24}$/)) {
+      if (
+        typeof filter[i] !== "object" &&
+        filter[i].match(/^[0-9a-fA-F]{24}$/)
+      ) {
         filter[i] = mongoose.Types.ObjectId(filter[i]);
       }
     }
-
     let queryArray = [
       { $match: filter },
       { $sort: sort },
       { $skip: skip },
       { $limit: limit },
     ];
-
     if (options.populateFk) {
       options.populateFk.split(",").forEach((populateOption) => {
         const [collection, field] = populateOption.split(".");

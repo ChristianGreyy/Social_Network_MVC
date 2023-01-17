@@ -1,5 +1,4 @@
 const submitFormLogin = () => {
-  console.log(document.getElementById("button").value);
   document
     .getElementById("form-login")
     .addEventListener("submit", async (e) => {
@@ -24,7 +23,6 @@ const submitFormLogin = () => {
         return;
       }
 
-      const result = await response.json();
       alert("Sai email hoặc tài khoản");
     });
 };

@@ -16,9 +16,9 @@ router
     postController.createPost
   )
   .get(
-    // auth("getPosts"),
-    // validate(postValidation.getPosts),
-    // getFriendId,
+    auth("getPosts"),
+    validate(postValidation.getPosts),
+    getFriendId,
     postController.getPosts
   );
 

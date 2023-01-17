@@ -8,31 +8,80 @@
         </div>
         <img src="/images/resources/profile-image.jpg" alt="">
         <ul class="profile-controls">
-            <li><a href="#" title="Add friend" data-toggle="tooltip"><i class="fa fa-user-plus"></i></a></li>
-            <li><a href="#" title="Follow" data-toggle="tooltip"><i class="fa fa-star"></i></a></li>
-            <li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i
-                        class="fa fa-comment"></i></a>
-            </li>
-            <li>
-                <div class="edit-seting" title="Edit Profile image"><i class="fa fa-sliders"></i>
-                    <ul class="more-dropdown">
-                        <li><a href="setting.html" title="">Update Profile
-                                Photo</a>
-                        </li>
-                        <li><a href="setting.html" title="">Update Header
-                                Photo</a>
-                        </li>
-                        <li><a href="setting.html" title="">Account
-                                Settings</a>
-                        </li>
-                        <li><a href="support-and-help.html" title="">Find
-                                Support</a></li>
-                        <li><a class="bad-report" href="#" title="">Report
-                                Profile</a></li>
-                        <li><a href="#" title="">Block Profile</a></li>
-                    </ul>
-                </div>
-            </li>
+            <% if(user.id !=remoteUser.id) { %>
+                <!-- When remoteUser is a user's friend -->
+                <% if(user.friends.findIndex(friend=> friend.user.toString() == remoteUser.id.toString() &&
+                    friend.status == 'friend') !=-1 ) { %>
+                    <li class="friend">
+                        <a title="Bạn bè" data-toggle="tooltip">
+                            <i class="fa fa-user"></i>
+                        </a>
+                    </li>
+                    <li class="add-tofrndlist add-tofrndlist-remove-friend">
+                        <a href="#" title="Hủy kết bạn" data-toggle="tooltip">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </li>
+
+                    <% } <!-- When remoteUser is a user's stranger -->
+                        else { %>
+                        <!--  remoteUser friend request to user  -->
+                        <% if(user.friends.findIndex(friend=> friend.user.toString() == remoteUser.id.toString())
+                            !=-1) { %>
+                            <li class="add-tofrndlist add-tofrndlist-add-remove add-tofrndlist-add">
+                                <a href="#" title="Chấp nhận lời mời kết bạn" data-toggle="tooltip">
+                                    <i class="fa fa-heart"></i>
+                                </a>
+                            </li>
+                            <li class="add-tofrndlist add-tofrndlist-add-remove add-tofrndlist-remove">
+                                <a href=" #" title="Hủy lời mời kết bạn"><i class="fa fa-trash"></i></a>
+                            </li>
+                            <!-- user friend request to remoteUser   -->
+                            <% } else { %>
+                                <li class="add-tofrndlist">
+                                    <% if(remoteUser.friends.findIndex(friend=> friend.user == user.id)==-1) { %>
+                                        <a href="#" title="Gủi lời mời kết bạn" data-toggle="tooltip">
+                                            <i class="fa fa-user-plus"></i>
+                                        </a>
+                                        <% } else { %>
+                                            <a href="#" title="Hủy lời mời kết bạn" data-toggle="tooltip">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                            <% } %>
+                                </li>
+                                <% } %>
+                                    <% } %>
+                                        <!-- <li>
+                </li> -->
+                                        <li><a href="#" title="Follow" data-toggle="tooltip"><i
+                                                    class="fa fa-star"></i></a>
+                                        </li>
+                                        <li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i
+                                                    class="fa fa-comment"></i></a>
+                                        </li>
+                                        <% } else { %>
+                                            <li>
+                                                <div class="edit-seting" title="Edit Profile image"><i
+                                                        class="fa fa-sliders"></i>
+                                                    <ul class="more-dropdown">
+                                                        <li><a href="setting.html" title="">Update Profile
+                                                                Photo</a>
+                                                        </li>
+                                                        <li><a href="setting.html" title="">Update Header
+                                                                Photo</a>
+                                                        </li>
+                                                        <li><a href="setting.html" title="">Account
+                                                                Settings</a>
+                                                        </li>
+                                                        <li><a href="support-and-help.html" title="">Find
+                                                                Support</a></li>
+                                                        <li><a class="bad-report" href="#" title="">Report
+                                                                Profile</a></li>
+                                                        <li><a href="#" title="">Block Profile</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <% } %>
         </ul>
         <ol class="pit-rate">
             <li class="rated"><i class="fa fa-star"></i></li>
@@ -109,12 +158,14 @@
                     </li>
                 </ul>
                 <ol class="folw-detail">
-                    <li><span>Posts</span><ins>101</ins></li>
+                    <li><span>Posts</span><ins>
+                            <%= remoteUser.postsNumber %>
+                        </ins></li>
                     <li><span>Followers</span><ins>
-                            <%= user.followers.length %>
+                            <%= remoteUser.followers.length %>
                         </ins></li>
                     <li><span>Following</span><ins>
-                            <%= user.following.length %>
+                            <%= remoteUser.following.length %>
                         </ins></li>
                 </ol>
             </div>

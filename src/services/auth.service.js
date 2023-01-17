@@ -47,6 +47,8 @@ const loginUserWithEmailAndPassword = async (email, password, req, res) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
+  console.log(tokenTypes.REFRESH);
+  console.log(refreshToken);
   const refreshTokenDoc = await Token.findOne({
     token: refreshToken,
     type: tokenTypes.REFRESH,

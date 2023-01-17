@@ -6,26 +6,39 @@ const { postService } = require("../../services");
 const socket = require("../../config/socket");
 
 const createPost = catchAsync(async (req, res) => {
-  console.log(req.body);
   if (req.file) {
     req.body["photo"] = "/resources/photos/".concat(
       req.file.path.split("/")[req.file.path.split("/").length - 1]
     );
   }
-  // console.log(req.user);
   req.body["author"] = req.user._id;
   const post = await postService.createPost(req.body);
-  socket.getIo().emit("getNewPost", post);
+  const userOnline = socket.getOnlineUser();
+  // console.log(req.user.friends);
+  req.user.friends.push({
+    user: req.user.id,
+  });
+  const rooms = userOnline.reduce((result, user) => {
+    let isFriend = false;
+    req.user.friends.forEach((u) => {
+      if (u.user.toString() == user.userId.toString()) {
+        isFriend = true;
+      }
+    });
+    if (isFriend) {
+      result.push(user.socketId);
+    }
+    return result;
+  }, []);
+
+  console.log(rooms);
+  socket.getIo().to(rooms).emit("getNewPost", post);
+
   res.status(httpStatus.CREATED).send(post);
 });
 
 const getPosts = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["content", "author"]);
-  if (req.query.friends == "true") {
-    filter["author"] = { $in: req.userIdArray };
-  }
-  console.log(filter);
-
+  const filter = pick(req.query, ["content", "author", "_id"]);
   const options = pick(req.query, [
     "sortBy",
     "limit",

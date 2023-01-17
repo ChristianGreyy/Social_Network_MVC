@@ -5,6 +5,7 @@ const home = catchAsync(async (req, res) => {
   res.render("index", {
     title: "Trang chủ",
     heading: "NEWSFEED",
+    likesTotal: req.likesTotal,
   });
 });
 

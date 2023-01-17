@@ -3,107 +3,59 @@ const { User } = require("../../models");
 const catchAsync = require("../../utils/catchAsync");
 
 const about = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("about", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "About",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const timeline = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
+  console.log(req.remoteUser);
   res.render("timeline", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Timeline",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const friends = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("timeline-friends", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Friends",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const photos = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("timeline-photos", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Photos",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const videos = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("timeline-videos", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Videos",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const groups = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("timeline-groups", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Groups",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 
 const statistics = catchAsync(async (req, res) => {
-  const user = await User.findOne({ slug: req.params.slug });
-  if (!user) {
-    return res.json({
-      msg: "Not found",
-    });
-  }
-
   res.render("statistics", {
-    remoteUser: user,
+    remoteUser: req.remoteUser,
     heading: "Analytics",
-    title: user.firstName + " " + user.lastName,
+    title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
   });
 });
 

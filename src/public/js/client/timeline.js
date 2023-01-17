@@ -5,6 +5,9 @@ const handleRenderData = async () => {
 
   // Create post
   postEvent.handleCreatePost(user.id);
+
+  const userEvent = new UserEvent();
+  userEvent.handleAddFriend();
 };
 
 window.addEventListener("load", (event) => {

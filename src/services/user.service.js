@@ -18,7 +18,6 @@ const createUser = async (userBody) => {
   do {
     slug = slugify(userBody.firstName + userBody.lastName, ".") + "." + num;
     user = await User.findOne({ slug: slug });
-    console.log(user);
     num++;
   } while (user);
 
@@ -47,7 +46,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  return User.findById(id).select("-isEmailVerified");
 };
 
 /**

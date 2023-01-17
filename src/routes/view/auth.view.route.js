@@ -5,6 +5,7 @@ const authController = require("../../controllers/view/auth.view.controller");
 const router = express.Router();
 
 router.get("/login", authController.login);
+router.get("/logout", authController.logout);
 router.get("/register", authController.register);
 router.get("/forgot", authController.forgot);
 router.get("/reset-password", authController.resetPassword);

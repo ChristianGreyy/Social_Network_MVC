@@ -2,9 +2,9 @@ const express = require("express");
 const authRoute = require("./auth.route");
 const userRoute = require("./user.route");
 const postRoute = require("./post.route");
+const messageRoute = require("./message.route");
 const commentRoute = require("./comment.route");
 const docsRoute = require("./docs.route");
-const documentRoute = require("./document.route");
 const opitonRoute = require("./option.route");
 const config = require("../../config/config");
 
@@ -28,12 +28,12 @@ const defaultRoutes = [
     route: commentRoute,
   },
   {
-    path: "/options",
-    route: opitonRoute,
+    path: "/messages",
+    route: messageRoute,
   },
   {
-    path: "/documents",
-    route: documentRoute,
+    path: "/options",
+    route: opitonRoute,
   },
 ];
 

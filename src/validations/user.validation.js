@@ -1,18 +1,19 @@
-const Joi = require('joi');
-const { password, objectId } = require('./custom.validation');
+const Joi = require("joi");
+const { password, objectId } = require("./custom.validation");
 
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    role: Joi.string().required().valid("user", "admin"),
   }),
 };
 
 const getUsers = {
   query: Joi.object().keys({
     name: Joi.string(),
+    status: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -32,9 +33,23 @@ const updateUser = {
   }),
   body: Joi.object()
     .keys({
+      id: Joi.custom(objectId),
+      _id: Joi.custom(objectId),
       email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+      avatar: Joi.string(),
+      background: Joi.string(),
+      friends: Joi.array(),
+      followers: Joi.array(),
+      following: Joi.array(),
+      createdAt: Joi.string(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
+      phoneNumber: Joi.string(),
+      slug: Joi.string(),
+      role: Joi.string(),
+      createdAt: Joi.string(),
+      updatedAt: Joi.string(),
+      postsNumber: Joi.number(),
     })
     .min(1),
 };
