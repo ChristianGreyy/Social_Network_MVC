@@ -41,6 +41,7 @@ app.use(
       styleSrc: ["'self'", "'unsafe-inline'", "https: *"],
       fontSrc: ["'self'", "'unsafe-inline'", "https: *"],
       imgSrc: ["'self'", "https: *", "data:", "blob:"],
+      mediaSrc: ["self", "http: *", "blob:"],
       upgradeInsecureRequests: [],
     },
   })

@@ -25,7 +25,6 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, cb) {
-    console.log(file);
     let mimetype;
     if (
       file.mimetype == "image/png" ||
@@ -43,7 +42,7 @@ const storage = multer.diskStorage({
       } else if (file.mimetype.includes(".sheet")) {
         mimetype = ".xlsx";
       }
-    } else if (file.mimetytpe == "video/mp4") {
+    } else if (file.mimetype == "video/mp4") {
       mimetype = file.mimetype.split("/")[1];
     }
     const uniqueSuffix =
@@ -55,8 +54,6 @@ const storage = multer.diskStorage({
 function fileFilter(req, file, cb) {
   // The function should call `cb` with a boolean
   // to indicate if the file should be accepted
-
-  console.log(req, file, cb);
 
   // To reject this file pass `false`, like so:
   cb(null, false);

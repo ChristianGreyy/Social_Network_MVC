@@ -72,4 +72,74 @@ socket.on("getUpdatedPost", (newPost) => {
     .text(newPost.likes.length);
 });
 
-socket.on("msg", (value) => [console.log(value)]);
+// MESSAGE
+
+socket.on("getNewMessage", (newMessage) => {
+  const message = newMessage.results[0];
+  const messageHelper = new MessageHelper();
+
+  let contentElement = messageHelper.htmlContentElement(message);
+  // Text
+  if (message.text) {
+    $(".text-area").find("input")[0].value = "";
+  }
+  // Photo
+  if (message.photo) {
+    $(".submit-message").css("display", "none");
+
+    $(".message-content").html(`
+    <input type="text" placeholder="write your message here..">
+  `);
+  }
+  // Video
+  if (message.video) {
+    $(".submit-message").css("display", "none");
+
+    $(".message-content").html(`
+    <input type="text" placeholder="write your message here..">
+  `);
+  }
+
+  // Document
+  if (message.document) {
+    $(".submit-message").css("display", "none");
+
+    $(".message-content").html(`
+    <input type="text" placeholder="write your message here..">
+  `);
+  }
+  let bonusHtml = `
+    <li class="you">
+      <figure>
+      <a href="/user/${messenger.slug}">
+      <img style="width: 25px; height: 25px;" src="${messenger.avatar}" alt="">
+      </a>
+
+      </figure>
+      <div class="text-box">
+          ${contentElement}
+          <span><i class="ti-check"></i><i class="ti-check"></i>
+              ${moment(message.updatedAt).from()}</span>
+      </div>
+  </li>
+  `;
+  $(".conversations").html($(".conversations").html() + bonusHtml);
+
+  // set typing
+  $(".text-area")
+    .find("input")
+    .on("keyup", async function (e) {
+      if (e.target.value.length > 0) {
+        $(".submit-message").css("display", "block");
+      } else {
+        $(".submit-message").css("display", "none");
+      }
+    });
+
+  // set scroll bar is bottom
+  var messageBody = document.querySelector(".conversations");
+  messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+  const messageEvent = new MessageEvent();
+  messageEvent.handleActiveMessage();
+});

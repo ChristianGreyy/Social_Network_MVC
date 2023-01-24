@@ -25,17 +25,21 @@ module.exports = {
         const index = onlineUsers.findIndex(
           (onlineUser) => onlineUser.userId == user.id
         );
+        socket.join(socket.id);
         if (index == -1) {
-          socket.join(socket.id);
           onlineUsers.push({
             socketId: socket.id,
             userId: user.id,
           });
           console.log(socket.id);
+        } else {
+          onlineUsers[index] = {
+            socketId: socket.id,
+            userId: user.id,
+          };
         }
+        console.log("onlineUsers", onlineUsers);
       });
-
-      console.log("onlineUsers", onlineUsers);
 
       socket.once("close", () => {
         console.log("socket::close");

@@ -17,6 +17,12 @@ class MessageHelper {
           ? "Bạn đã gửi 1 hình ảnh "
           : message.sender[0].firstName.concat("đã gửi 1 hình ảnh");
     }
+    if (message.video) {
+      messageContent =
+        message.sender[0]._id == user.id
+          ? "Bạn đã gửi 1 video "
+          : message.sender[0].firstName.concat("đã gửi 1 video");
+    }
     if (message.document.length > 0) {
       messageContent =
         message.sender[0]._id == user.id
@@ -62,16 +68,24 @@ class MessageHelper {
         </li>
         `;
   }
-  htmlMessengerMessage(message) {
-    let senderClass = message.sender[0]._id == user.id ? "me" : "you";
+  htmlContentElement(message) {
     let contentElement;
+    // Text
     if (message.text) {
       contentElement = `<p>${message.text}</p>`;
     }
+    // Photo
     if (message.photo) {
       contentElement = `<a href="${message.photo}"><img style="max-width: 100%;" src="${message.photo}"/></a>`;
     }
-    if (message.document.length > 0) {
+    // Video
+    if (message.video) {
+      contentElement = `<video controls>
+        <source src="${message.video}" type="video/mp4">
+      </video>`;
+    }
+    // Document
+    if (message.document?.length > 0) {
       let size;
       if (message.document[0].size > 10000000000) {
         size = Math.round(message.document[0].size / Math.pow(1024, 2)) + "MB";
@@ -100,6 +114,13 @@ class MessageHelper {
         </div>
       </a>`;
     }
+    return contentElement;
+  }
+  htmlMessengerMessage(message) {
+    const messageHelper = new MessageHelper();
+
+    let senderClass = message.sender[0]._id == user.id ? "me" : "you";
+    const contentElement = messageHelper.htmlContentElement(message);
     return `
         <li class="${senderClass}">
             <figure>

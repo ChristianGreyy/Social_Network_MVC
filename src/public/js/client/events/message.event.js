@@ -103,6 +103,7 @@ class MessageEvent {
         let currentText = $(".text-area").find("input")[0].value;
         $(".text-area").find("input")[0].value =
           currentText + e.target.innerText;
+        $(".submit-message").css("display", "block");
       });
 
     // use attachment file
@@ -111,6 +112,7 @@ class MessageEvent {
       .on("change", function (e) {
         $(".submit-message").css("display", "block");
         let file = e.target.files[0];
+        // Photo
         if (file) {
           if (
             file.type == "image/png" ||
@@ -131,7 +133,9 @@ class MessageEvent {
               </div>
               `
             );
-          } else if (
+          }
+          // Document
+          else if (
             file.type.includes(".document") ||
             file.type.includes(".sheet")
           ) {
@@ -160,6 +164,26 @@ class MessageEvent {
             </div>
             `);
           }
+          // Video
+          else if (file.type == "video/mp4") {
+            $(".message-content").html(
+              `
+              <div style="position: relative; width: 50px; height: 50px;"
+                class="message-content-photo">
+                <video style="width: 100%; height: 100%; border-radius: 8px;"
+                  <source src="${URL.createObjectURL(
+                    e.target.files[0]
+                  )}"  type="video/mp4">
+                </video>
+                <a class="message-conten-close"
+                  style="width:24px; height: 24px; border-radius: 50%; display: flex; align-items: center;justify-content: center; position: absolute; right: -4px; top: -4px; background-color: white; z-index: 1; box-shadow: 0 0 10px #888; cursor: pointer;"
+                  class="" title=""><i
+                    class="fa fa-close"></i></a>
+              </div>
+              `
+            );
+          }
+
           // Click close file
           $(".message-conten-close").on("click", function () {
             $(".submit-message").css("display", "none");
@@ -247,11 +271,14 @@ class MessageEvent {
         if (response.status == 201) {
           const data = await response.json();
           const message = data.results[0];
-          let contentElement;
+          const messageHelper = new MessageHelper();
+
+          let contentElement = messageHelper.htmlContentElement(message);
+          // Text
           if (message.text) {
             $(".text-area").find("input")[0].value = "";
-            contentElement = `<p>${message.text}</p>`;
           }
+          // Photo
           if (message.photo) {
             $(".submit-message").css("display", "none");
 
@@ -259,8 +286,18 @@ class MessageEvent {
             <input type="text" placeholder="write your message here..">
           `);
             e.target.value = "";
-            contentElement = `<a href="${message.photo}"><img style="max-width: 100%;" src="${message.photo}"/></a>`;
           }
+          // Video
+          if (message.video) {
+            $(".submit-message").css("display", "none");
+
+            $(".message-content").html(`
+            <input type="text" placeholder="write your message here..">
+          `);
+            e.target.value = "";
+          }
+
+          // Document
           if (message.document) {
             $(".submit-message").css("display", "none");
 
@@ -268,36 +305,6 @@ class MessageEvent {
             <input type="text" placeholder="write your message here..">
           `);
             e.target.value = "";
-
-            let size;
-            if (message.document[0].size > 10000000000) {
-              size =
-                Math.round(message.document[0].size / Math.pow(1024, 2)) + "MB";
-            } else {
-              size =
-                Math.round(message.document[0].size / Math.pow(1024, 1)) + "KB";
-            }
-            contentElement = `<a href="${message.document[0].path}">
-              <div style="border-radius: 8px; margin-left: 30px; position: relative; width: 128px; height: 48px; background-color: #F2F3F5;"
-                class="message-content-document">
-                <div style="display: flex; align-items: center; width: 100%; height: 100%; padding: 14px;"
-                  class="message-content-document-content">
-                  <div style="background-color: white; color: black; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center;"
-                    class="message-content-document-content__left">
-                    <i class="ti-clip"></i>
-                  </div>
-                  <div
-                    class="message-content-document-content__right" style="margin-left: 4px; display: flex; flex-direction: column; align-items: start;">
-                    ${
-                      message.document[0].originalName.length > 9
-                        ? message.document[0].originalName.slice(0, 6) + "..."
-                        : message.document[0].originalName
-                    }
-                    <div>${size}</div>
-                  </div>
-                </div>
-              </div>
-            </a>`;
           }
           let bonusHtml = `
             <li class="me">

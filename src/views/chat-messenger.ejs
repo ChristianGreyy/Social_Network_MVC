@@ -621,8 +621,8 @@
 
 	</html>
 
+	<script>
+		const messenger = JSON.parse('<%- JSON.stringify(messenger) %>');
+	</script>
 	<%- include('./includes/end.ejs') %>
-		<script>
-			const messenger = JSON.parse('<%- JSON.stringify(messenger) %>');
-		</script>
 		<script src="/js/client/chat-messenger.js"></script>

@@ -15,7 +15,6 @@ const createMessage = async (messageBody) => {
     { _id: newMessage._id.toString() },
     { populatePk: "documents.document" }
   );
-  console.log(newMessage);
   return newMessage;
 };
 
