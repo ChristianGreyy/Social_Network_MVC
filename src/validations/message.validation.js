@@ -26,26 +26,25 @@ const getMessages = {
 
 const getMessage = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    messageId: Joi.string().custom(objectId),
   }),
 };
 
 const updateMessage = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+    messageId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+      read: Joi.boolean(),
+      text: Joi.string(),
     })
     .min(1),
 };
 
 const deleteMessage = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
+    messageId: Joi.string().custom(objectId),
   }),
 };
 

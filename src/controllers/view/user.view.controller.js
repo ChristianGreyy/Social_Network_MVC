@@ -16,6 +16,7 @@ const timeline = catchAsync(async (req, res) => {
     remoteUser: req.remoteUser,
     heading: "Timeline",
     title: req.remoteUser.firstName + " " + req.remoteUser.lastName,
+    likesTotal: req.likesTotal,
   });
 });
 

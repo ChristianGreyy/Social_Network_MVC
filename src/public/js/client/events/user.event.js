@@ -61,24 +61,24 @@ class UserEvent {
           });
 
           try {
-            const res = await Promise.all([
-              fetch(`/api/v1/users/${user.id}`, {
-                method: "PATCH",
-                headers: new Headers({
-                  Authorization: "Bearer " + token,
-                  "Content-Type": "application/json",
-                }),
-                body: JSON.stringify(user),
-              }),
-              fetch(`/api/v1/users/${remoteUserid}`, {
-                method: "PATCH",
-                headers: new Headers({
-                  Authorization: "Bearer " + token,
-                  "Content-Type": "application/json",
-                }),
-                body: JSON.stringify(remoteUserCl),
-              }),
-            ]);
+            // const res = await Promise.all([
+            //   fetch(`/api/v1/users/${user.id}`, {
+            //     method: "PATCH",
+            //     headers: new Headers({
+            //       Authorization: "Bearer " + token,
+            //       "Content-Type": "application/json",
+            //     }),
+            //     body: JSON.stringify(user),
+            //   }),
+            //   fetch(`/api/v1/users/${remoteUserid}`, {
+            //     method: "PATCH",
+            //     headers: new Headers({
+            //       Authorization: "Bearer " + token,
+            //       "Content-Type": "application/json",
+            //     }),
+            //     body: JSON.stringify(remoteUserCl),
+            //   }),
+            // ]);
 
             // In remoteUser's timeline
             if (
@@ -262,9 +262,11 @@ class UserEvent {
     $(".top-area > .setting-area > li > a").on("click", async function () {
       const userEvent = new UserEvent();
       const cookieHelper = new CookieHelper();
+      const messageHelper = new MessageHelper();
       const token = cookieHelper.getCookie("jwt");
       var $parent = $(this).parent("li");
       var dropdown = $(this).siblings("div");
+      // Friend request notifications
       if ($parent.hasClass("friend-requests-item")) {
         if (!dropdown.hasClass("active")) {
           let userHelper = new UserHelper();
@@ -313,49 +315,172 @@ class UserEvent {
             userEvent.handleAddFriend();
           }
         }
-      } else if ($parent.hasClass("message-item")) {
+      }
+      // Message notifications
+      else if ($parent.hasClass("message-item")) {
         if (!dropdown.hasClass("active")) {
-          const response = await fetch(`/api/v1/users?status=request`, {
-            method: "GET",
-            headers: new Headers({
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
+          const response = await Promise.all([
+            await fetch(
+              `/api/v1/messages?sortBy=createdAt:desc&populatePk=users.sender,users.receiver,documents.document`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + token,
+                },
+              }
+            ),
+            await fetch(`/api/v1/users?status=onlineFriend`, {
+              method: "GET",
+              headers: new Headers({
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+              }),
             }),
-          });
-          if (response.status == 200) {
-            const data = await response.json();
-            const users = data.results;
-            console.log(users);
-            let html = users.map((user) => {
-              return `
-                <li>
-                  <div>
-                      <figure>
-                          <img style="height: 40px; width: 40px;" src="${
-                            user.avatar
-                          }" alt="">
-                      </figure>
-                      <div class="mesg-meta">
-                          <h6><a href="#" title="">${user.firstName.concat(
-                            " " + user.lastName
-                          )}</a></h6>
-                          <span><b>Amy</b> is mutule friend</span>
-                          <i>yesterday</i>
-                      </div>
-                      <div class="add-del-friends">
-                          <a onclick="(function(){
-                        alert('Hey i am calling');
-                        return false;
-                    })()" class="add-tofrndlist-add" href="#" title=""><i class="fa fa-heart"></i></a>
-                          <a class="add-tofrndlist-remove" href="#" title=""><i class="fa fa-trash"></i></a>
-                      </div>
-                  </div>
-              </li>
-              `;
+          ]);
+          const [response1, response2] = response;
+
+          if (response1.status == 200 && response2.status == 200) {
+            const data1 = await response1.json();
+            const data2 = await response2.json();
+
+            const messagesData = data1.results;
+            const userOnlineData = data2.results;
+            const userMessages = [];
+            const messages = messagesData.filter((message) => {
+              if (
+                !userMessages.find((userMessage) => {
+                  return (
+                    userMessage.includes(message.sender[0]._id) &&
+                    userMessage.includes(message.receiver[0]._id)
+                  );
+                })
+              ) {
+                userMessages.push([
+                  message.sender[0]._id,
+                  message.receiver[0]._id,
+                ]);
+                return message;
+              }
+            });
+            let html = messages.map((msg) => {
+              return messageHelper.htmlUserChatList(msg, userOnlineData);
             });
             $(dropdown).find(".drops-menu").html(html);
-            $parent.find(".bg-red").text(users.length);
+
+            // Handle click messenger
+            $(".nav-item")
+              .find("a#nav-item-messenger")
+              .on("click", async (e) => {
+                e.preventDefault();
+                const messengerSlug = e.currentTarget.className;
+
+                const response = await Promise.all([
+                  await fetch(
+                    `/api/v1/messages?sortBy=createdAt:asc&populatePk=users.sender,users.receiver,documents.document&friend=${messengerSlug}`,
+                    {
+                      method: "GET",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token,
+                      },
+                    }
+                  ),
+                  await fetch(`/api/v1/users?status=onlineFriend`, {
+                    method: "GET",
+                    headers: new Headers({
+                      Authorization: "Bearer " + token,
+                      "Content-Type": "application/json",
+                    }),
+                  }),
+                ]);
+                const [response1, response2] = response;
+
+                if (response1.status == 200 && response2.status == 200) {
+                  const data1 = await response1.json();
+                  const data2 = await response2.json();
+                  const messages = data1.results;
+                  const userOnlineData = data2.results.map((user) => user.id);
+                  console.log(messages);
+                  let userMessenger;
+                  if (messages[messages.length - 1].sender[0]._id != user.id) {
+                    // Update api message status of user
+                    if (messages[messages.length - 1].read == false) {
+                      const response3 = await fetch(
+                        `/api/v1/messages/${messages[messages.length - 1]._id}`,
+                        {
+                          method: "PATCH",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + token,
+                          },
+                          body: JSON.stringify({
+                            read: true,
+                          }), // body data type must match "Content-Type" header
+                        }
+                      );
+                    }
+                    userMessenger = messages[messages.length - 1].sender[0];
+                  } else {
+                    userMessenger = messages[messages.length - 1].receiver[0];
+                  }
+
+                  // Render messenger message
+                  let html = messages.map((msg) => {
+                    return messageHelper.htmlMessengerMessage(msg, "index");
+                  });
+
+                  $(".conversations").html(html.join(""));
+
+                  // set scroll bar is bottom
+                  let messageBody = document.querySelector(".conversations");
+                  messageBody.scrollTop =
+                    messageBody.scrollHeight - messageBody.clientHeight;
+                }
+              });
           }
+
+          // const response = await fetch(`/api/v1/users?status=request`, {
+          //   method: "GET",
+          //   headers: new Headers({
+          //     Authorization: "Bearer " + token,
+          //     "Content-Type": "application/json",
+          //   }),
+          // });
+          // if (response.status == 200) {
+          //   const data = await response.json();
+          //   const users = data.results;
+          //   console.log(users);
+          //   let html = users.map((user) => {
+          //     return `
+          //       <li>
+          //         <div>
+          //             <figure>
+          //                 <img style="height: 40px; width: 40px;" src="${
+          //                   user.avatar
+          //                 }" alt="">
+          //             </figure>
+          //             <div class="mesg-meta">
+          //                 <h6><a href="#" title="">${user.firstName.concat(
+          //                   " " + user.lastName
+          //                 )}</a></h6>
+          //                 <span><b>Amy</b> is mutule friend</span>
+          //                 <i>yesterday</i>
+          //             </div>
+          //             <div class="add-del-friends">
+          //                 <a onclick="(function(){
+          //               alert('Hey i am calling');
+          //               return false;
+          //           })()" class="add-tofrndlist-add" href="#" title=""><i class="fa fa-heart"></i></a>
+          //                 <a class="add-tofrndlist-remove" href="#" title=""><i class="fa fa-trash"></i></a>
+          //             </div>
+          //         </div>
+          //     </li>
+          //     `;
+          //   });
+          //   $(dropdown).find(".drops-menu").html(html);
+          //   $parent.find(".bg-red").text(users.length);
+          // }
         }
       }
       $(this)
@@ -402,6 +527,7 @@ class UserEvent {
       userHelper.handleErrorToast("Lỗi server", "Xin vui lòng thử lại");
     }
   }
+
   async handleRenderOnlineFriend() {
     const userEvent = new UserEvent();
     const userHelper = new UserHelper();

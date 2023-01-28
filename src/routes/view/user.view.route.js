@@ -2,7 +2,10 @@ const express = require("express");
 const validate = require("../../middlewares/validate");
 const { authRender } = require("../../middlewares/auth-render");
 const userController = require("../../controllers/view/user.view.controller");
-const { viewGetRemoteUser } = require("../../middlewares/user.middleware");
+const {
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+} = require("../../middlewares/user.middleware");
 
 const router = express.Router();
 
@@ -37,6 +40,12 @@ router.get(
   viewGetRemoteUser,
   userController.statistics
 );
-router.get("/:slug", authRender, viewGetRemoteUser, userController.timeline);
+router.get(
+  "/:slug",
+  authRender,
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+  userController.timeline
+);
 
 module.exports = router;

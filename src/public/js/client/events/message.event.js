@@ -4,19 +4,34 @@ class MessageEvent {
     const messageHelper = new MessageHelper();
     const token = cookieHelper.getCookie("jwt");
     // &populateFk=users.sender,users.receiver
-    const response = await fetch(
-      `/api/v1/messages?sortBy=createdAt:desc&populatePk=users.sender,users.receiver,documents.document`,
-      {
+
+    const response = await Promise.all([
+      await fetch(
+        `/api/v1/messages?sortBy=createdAt:desc&populatePk=users.sender,users.receiver,documents.document`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      ),
+      await fetch(`/api/v1/users?status=onlineFriend`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+        headers: new Headers({
           Authorization: "Bearer " + token,
-        },
-      }
-    );
-    if (response.status == 200) {
-      const data = await response.json();
-      const messagesData = data.results;
+          "Content-Type": "application/json",
+        }),
+      }),
+    ]);
+    const [response1, response2] = response;
+
+    if (response1.status == 200 && response2.status == 200) {
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+
+      const messagesData = data1.results;
+      const userOnlineData = data2.results;
       const userMessages = [];
       const messages = messagesData.filter((message) => {
         if (
@@ -32,7 +47,7 @@ class MessageEvent {
         }
       });
       let html = messages.map((msg) => {
-        return messageHelper.htmlUserChatList(msg);
+        return messageHelper.htmlUserChatList(msg, userOnlineData);
       });
       $(".msg-pepl-list").html(html.join(""));
 
@@ -55,12 +70,14 @@ class MessageEvent {
         let slugElement = aElement.className;
         if (slugElement == userSlug) {
           aElement.classList.add("active");
+          // Update view message status of user
+          navItem[i].className = "nav-item";
         }
       }
     }
   }
 
-  async handleRenderMessagerMessage(user) {
+  async handleRenderMessagerMessage() {
     const cookieHelper = new CookieHelper();
     const messageHelper = new MessageHelper();
     const token = cookieHelper.getCookie("jwt");
@@ -70,23 +87,79 @@ class MessageEvent {
       ];
     let url;
     if (window.location.href.split("/").length == 5) {
-      const response = await fetch(
-        `/api/v1/messages?sortBy=createdAt:asc&populatePk=users.sender,users.receiver,documents.document&friend=${userSlug}`,
-        {
+      const response = await Promise.all([
+        await fetch(
+          `/api/v1/messages?sortBy=createdAt:asc&populatePk=users.sender,users.receiver,documents.document&friend=${userSlug}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+          }
+        ),
+        await fetch(`/api/v1/users?status=onlineFriend`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+          headers: new Headers({
             Authorization: "Bearer " + token,
-          },
+            "Content-Type": "application/json",
+          }),
+        }),
+      ]);
+      const [response1, response2] = response;
+
+      if (response1.status == 200 && response2.status == 200) {
+        const data1 = await response1.json();
+        const data2 = await response2.json();
+        const messages = data1.results;
+        const userOnlineData = data2.results.map((user) => user.id);
+        let userMessenger;
+        if (messages[messages.length - 1].sender[0]._id != user.id) {
+          // Update api message status of user
+          if (messages[messages.length - 1].read == false) {
+            const response3 = await fetch(
+              `/api/v1/messages/${messages[messages.length - 1]._id}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + token,
+                },
+                body: JSON.stringify({
+                  read: true,
+                }), // body data type must match "Content-Type" header
+              }
+            );
+          }
+          userMessenger = messages[messages.length - 1].sender[0];
+        } else {
+          userMessenger = messages[messages.length - 1].receiver[0];
         }
-      );
-      const data = await response.json();
-      if (response.status == 200) {
-        const messages = data.results;
+
+        // Set user status
+        if (userOnlineData.includes(userMessenger._id)) {
+          $(".messenger").find(".active-user-info").find("span").text("Online");
+          $(".messenger")
+            .find(".active-user-status")
+            .find("span")
+            .attr("class", "status f-online");
+        } else {
+          $(".messenger")
+            .find(".active-user-info")
+            .find("span")
+            .text("Offline");
+          $(".messenger")
+            .find(".active-user-status")
+            .find("span")
+            .attr("class", "status f-offline");
+        }
+
+        // Render messenger message
         let html = messages.map((msg) => {
-          return messageHelper.htmlMessengerMessage(msg);
+          return messageHelper.htmlMessengerMessage(msg, "index");
         });
         $(".conversations").html(html.join(""));
+
         // set scroll bar is bottom
         let messageBody = document.querySelector(".conversations");
         messageBody.scrollTop =
@@ -261,19 +334,36 @@ class MessageEvent {
 
         // return;
 
-        const response = await fetch(`/api/v1/messages`, {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          body: createdMessage,
-        });
-        if (response.status == 201) {
-          const data = await response.json();
-          const message = data.results[0];
+        const response = await Promise.all([
+          await fetch(`/api/v1/messages`, {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            body: createdMessage,
+          }),
+          await fetch(`/api/v1/users?status=onlineFriend`, {
+            method: "GET",
+            headers: new Headers({
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            }),
+          }),
+        ]);
+        const [response1, response2] = response;
+
+        if (response1.status == 201 && response2.status == 200) {
+          const data1 = await response1.json();
+          const data2 = await response2.json();
+          const message = data1.results[0];
+          const userOnlineData = data2.results;
+
           const messageHelper = new MessageHelper();
 
-          let contentElement = messageHelper.htmlContentElement(message);
+          let contentElement = messageHelper.htmlContentElement(
+            message,
+            userOnlineData
+          );
           // Text
           if (message.text) {
             $(".text-area").find("input")[0].value = "";
@@ -323,7 +413,30 @@ class MessageEvent {
               </div>
           </li>
           `;
+
+          // Solve add messenger messsage
           $(".conversations").html($(".conversations").html() + bonusHtml);
+
+          // Solve user chat list
+          const userSlug =
+            window.location.href.split("/")[
+              window.location.href.split("/").length - 1
+            ];
+
+          const navItem = document.querySelectorAll(".nav-item");
+          for (let i in navItem) {
+            if (isElement(navItem[i])) {
+              console.log(navItem[i]);
+              const aElement = navItem[i].querySelector("a");
+              let slugElement = aElement.className;
+              if (slugElement.includes(userSlug)) {
+                navItem[i].innerHTML = messageHelper.htmlUserChatList(
+                  message,
+                  userOnlineData
+                );
+              }
+            }
+          }
 
           // set typing
           $(".text-area")

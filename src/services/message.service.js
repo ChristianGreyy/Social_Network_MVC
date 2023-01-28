@@ -13,7 +13,7 @@ const createMessage = async (messageBody) => {
   let newMessage = await Message.create(messageBody);
   newMessage = await Message.paginateAggregrate(
     { _id: newMessage._id.toString() },
-    { populatePk: "documents.document" }
+    { populatePk: "users.sender,users.receiver,documents.document" }
   );
   return newMessage;
 };
@@ -33,7 +33,7 @@ const queryMessages = async (filter, options) => {
 };
 
 /**
- * Get user by id
+ * Get messsage by id
  * @param {ObjectId} id
  * @returns {Promise<Message>}
  */
@@ -42,7 +42,7 @@ const getMessageById = async (id) => {
 };
 
 /**
- * Get user by email
+ * Get messsage by email
  * @param {string} email
  * @returns {Promise<Message>}
  */
@@ -51,39 +51,45 @@ const getMessageByEmail = async (email) => {
 };
 
 /**
- * Update user by id
- * @param {ObjectId} userId
+ * Update messsage by id
+ * @param {ObjectId} messsageId
  * @param {Object} updateBody
  * @returns {Promise<Message>}
  */
-const updateMessageById = async (userId, updateBody) => {
-  const user = await getMessageById(userId);
-  if (!user) {
+const updateMessageById = async (messsageId, updateBody) => {
+  const messsage = await getMessageById(messsageId);
+  if (!messsage) {
     throw new ApiError(httpStatus.NOT_FOUND, "Message not found");
   }
-  if (
-    updateBody.email &&
-    (await Message.isEmailTaken(updateBody.email, userId))
-  ) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+  // if (
+  //   updateBody.email &&
+  //   (await Message.isEmailTaken(updateBody.email, messsageId))
+  // ) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
+  // }
+  Object.assign(messsage, updateBody);
+  let updatedMessage = await messsage.save();
+
+  updatedMessage = await Message.paginateAggregrate(
+    { _id: updatedMessage._id.toString() },
+    { populatePk: "users.sender,users.receiver,documents.document" }
+  );
+
+  return updatedMessage;
 };
 
 /**
- * Delete user by id
- * @param {ObjectId} userId
+ * Delete messsage by id
+ * @param {ObjectId} messsageId
  * @returns {Promise<Message>}
  */
-const deleteMessageById = async (userId) => {
-  const user = await getMessageById(userId);
-  if (!user) {
+const deleteMessageById = async (messsageId) => {
+  const messsage = await getMessageById(messsageId);
+  if (!messsage) {
     throw new ApiError(httpStatus.NOT_FOUND, "Message not found");
   }
-  await user.remove();
-  return user;
+  await messsage.remove();
+  return messsage;
 };
 
 module.exports = {

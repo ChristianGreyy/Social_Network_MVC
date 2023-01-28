@@ -28,7 +28,10 @@
                     </em>
                 </a>
                 <div class="dropdowns">
-                    <span>5 New Requests <a href="#" title="">View all Requests</a></span>
+                    <span>
+                        <%= user.friends.filter(friend=> friend.status == 'stranger').length %> New Requests <a href="#"
+                                title="">View all Requests</a>
+                    </span>
                     <ul class="drops-menu">
                         <!-- Data render here -->
                         <!-- <li>

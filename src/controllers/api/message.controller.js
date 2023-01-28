@@ -21,15 +21,13 @@ const createMessage = catchAsync(async (req, res) => {
     }
   }
   const message = await messageService.createMessage(req.body);
-  const messengerId = message.results[0].receiver;
+  const messengerId = message.results[0].receiver[0]._id;
   const userOnline = socket.getOnlineUser();
   const onlineMessenger = userOnline.find((user) => {
     return user.userId == messengerId;
   });
 
-  console.log(onlineMessenger);
-
-  socket.getIo().to(onlineMessenger.socketId).emit("getNewMessage", message);
+  socket.getIo().to(onlineMessenger?.socketId).emit("getNewMessage", message);
   res.status(httpStatus.CREATED).send(message);
 });
 

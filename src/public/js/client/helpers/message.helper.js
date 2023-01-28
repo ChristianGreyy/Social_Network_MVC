@@ -1,9 +1,39 @@
 class MessageHelper {
-  htmlUserChatList(message) {
+  htmlUserChatList(message, userOnline) {
     let messenger =
       message.sender[0]._id == user.id
         ? message.receiver[0]
         : message.sender[0];
+
+    userOnline = userOnline.map((user) => user.id);
+    // MESSAGE STATUS
+    let messageStatus;
+    let messageStatusRemote = {
+      status: "seen",
+      src: undefined,
+    };
+    if (message.read == false) {
+      messageStatus = message.sender[0]._id == user.id ? "" : "unread";
+    } else {
+      messageStatus = "";
+      messageStatusRemote =
+        message.sender[0]._id == user.id
+          ? {
+              status: "seen active",
+              src: message.receiver[0].avatar,
+            }
+          : messageStatusRemote;
+    }
+
+    // USER STATUS
+    let userStatus;
+    if (userOnline.includes(messenger._id)) {
+      userStatus = "status f-online";
+    } else {
+      userStatus = "status f-off";
+    }
+
+    // CONTENT MESSAGE
     let messageContent;
     if (message.text) {
       messageContent =
@@ -15,30 +45,30 @@ class MessageHelper {
       messageContent =
         message.sender[0]._id == user.id
           ? "Bạn đã gửi 1 hình ảnh "
-          : message.sender[0].firstName.concat("đã gửi 1 hình ảnh");
+          : message.sender[0].firstName.concat(" đã gửi 1 hình ảnh");
     }
     if (message.video) {
       messageContent =
         message.sender[0]._id == user.id
           ? "Bạn đã gửi 1 video "
-          : message.sender[0].firstName.concat("đã gửi 1 video");
+          : message.sender[0].firstName.concat(" đã gửi 1 video");
     }
     if (message.document.length > 0) {
       messageContent =
         message.sender[0]._id == user.id
           ? "Bạn đã gửi 1 file đính kèm "
-          : message.sender[0].firstName.concat("đã gửi 1 file đính kèm");
+          : message.sender[0].firstName.concat(" đã gửi 1 file đính kèm");
     }
     return `
-        <li class="nav-item unread">
-            <a class="${messenger.slug}" href="/chat-messenger/${
-      messenger.slug
-    }">
-                <figure><img src="${messenger.avatar}"
+        <li class="nav-item ${messageStatus}">
+            <a id="nav-item-messenger" style="display: flex; align-items: center;" class="${
+              messenger.slug
+            }" href="/chat-messenger/${messenger.slug}">
+                <figure><img style="width: 40px;" src="${messenger.avatar}"
                         alt="">
-                    <span class="status f-online"></span>
+                    <span class="${userStatus}"></span>
                 </figure>
-                <div class="user-name">
+                <div style="padding-left: 12px;" class="user-name">
                     <h6 class="">${messenger.firstName.concat(
                       " " + messenger.lastName
                     )}</h6>
@@ -48,7 +78,7 @@ class MessageHelper {
                         : messageContent
                     } - ${moment(message.updatedAt).from()}</span>
                 </div>
-                <div class="more">
+                <div style="position: absolute; right: 12px;" class="more">
                     <div class="more-post-optns"><i class="ti-more-alt"></i>
                         <ul>
                             <li><i class="fa fa-bell-slash-o"></i>Mute</li>
@@ -63,6 +93,9 @@ class MessageHelper {
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="${messageStatusRemote.status}">
+                    <img src="${messageStatusRemote.src}" />
                 </div>
             </a>
         </li>
@@ -116,28 +149,47 @@ class MessageHelper {
     }
     return contentElement;
   }
-  htmlMessengerMessage(message) {
+  htmlMessengerMessage(message, page) {
     const messageHelper = new MessageHelper();
 
     let senderClass = message.sender[0]._id == user.id ? "me" : "you";
     const contentElement = messageHelper.htmlContentElement(message);
-    return `
+    if (page == "messenger") {
+      return `
+          <li class="${senderClass}">
+              <figure>
+              <a href="/user/${message.sender[0].slug}">
+              <img style="width: 25px; height: 25px;"
+              src="${message.sender[0].avatar}"
+              alt="">
+              </a>
+  
+              </figure>
+              <div class="text-box">
+                  ${contentElement}
+                  <span><i class="ti-check"></i><i
+                          class="ti-check"></i>
+                      ${moment(message.updatedAt).from()}</span>
+              </div>
+          </li>
+          `;
+    } else {
+      return `
         <li class="${senderClass}">
-            <figure>
-            <a href="/user/${message.sender[0].slug}">
-            <img style="width: 25px; height: 25px;"
-            src="${message.sender[0].avatar}"
-            alt="">
-            </a>
-
-            </figure>
-            <div class="text-box">
-                ${contentElement}
-                <span><i class="ti-check"></i><i
-                        class="ti-check"></i>
-                    ${moment(message.updatedAt).from()}</span>
-            </div>
+          <div style="float: right; ${
+            senderClass == "me" ? "margin-left: 4px;" : "margin-right: 4px;"
+          }" class="chat-thumb"><img src="${message.sender[0].avatar}" alt="">
+          </div>
+          <div class="notification-event">
+            <span class="chat-message-item">
+              ${contentElement}
+            </span>
+            <span class="notification-date">${moment(
+              message.updatedAt
+            ).from()}</span>
+          </div>
         </li>
-        `;
+      `;
+    }
   }
 }

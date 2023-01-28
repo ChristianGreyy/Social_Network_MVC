@@ -1,5 +1,85 @@
+let editor;
 class PostEvent {
   handleCreatePost(userId) {
+    // New submit post box
+    $(".new-postbox").click(function () {
+      // $(this).find(".newpst-input").css("display", "block");
+      const check = $(this).find("textarea#editor");
+      if (check.length == 0) {
+        $(this).find(".newpst-input").css("width", "100%");
+        $(this).find(".newpst-input").css("margin", "30px 0");
+        $(this).find("textarea").attr("id", "editor");
+
+        ClassicEditor.create(document.querySelector("#editor"), {
+          toolbar: [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
+          ],
+          heading: {
+            options: [
+              {
+                model: "paragraph",
+                title: "Paragraph",
+                class: "ck-heading_paragraph",
+              },
+              {
+                model: "heading1",
+                view: "h1",
+                title: "Heading 1",
+                class: "ck-heading_heading1",
+              },
+              {
+                model: "heading2",
+                view: "h2",
+                title: "Heading 2",
+                class: "ck-heading_heading2",
+              },
+              {
+                model: "heading3",
+                view: "h3",
+                title: "Heading 3",
+                class: "ck-heading_heading3",
+              },
+              {
+                model: "heading4",
+                view: "h4",
+                title: "Heading 4",
+                class: "ck-heading_heading4",
+              },
+              {
+                model: "heading5",
+                view: "h5",
+                title: "Heading 5",
+                class: "ck-heading_heading5",
+              },
+              {
+                model: "heading6",
+                view: "h6",
+                title: "Heading 6",
+                class: "ck-heading_heading6",
+              },
+            ],
+          },
+        })
+          .then((newEditor) => {
+            editor = newEditor;
+            console.log(editor);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+
+      // .id = "editor";
+      $(".postoverlay").fadeIn(500);
+    });
+
     $(".attachments-image").on("change", function (e) {
       $(".photo-container").css("display", "flex");
       $(".photo").css("display", "block");
@@ -10,7 +90,8 @@ class PostEvent {
       const cookieHelper = new CookieHelper();
       const token = cookieHelper.getCookie("jwt");
       const photo = $(".attachments-image")[0].files[0];
-      const text = $(".newpst-input").find("textarea").val();
+      // const text = $(".newpst-input").find("textarea").val();
+      const text = editor.getData();
       let createdPost = new FormData();
       createdPost.append("content", text);
       createdPost.append("author", userId);
@@ -220,7 +301,18 @@ class PostEvent {
       return postHelper.solveRenderHTMLPost(post, remoteUser, user);
     });
 
+    // console.log(html.join(""));
+
     document.querySelector(".loadMore").innerHTML = html.join("");
+
+    const desElement = document.querySelectorAll(".description");
+    // console.log(desElement);
+    for (let i in desElement) {
+      if (isElement(desElement[i])) {
+        const pElement = desElement[i].querySelector("p");
+        pElement.innerHTML = pElement.innerText;
+      }
+    }
 
     // Render comments & Creat comment
     const commentEvent = new CommentEvent();

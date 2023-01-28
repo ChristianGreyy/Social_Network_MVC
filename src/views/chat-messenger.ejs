@@ -121,12 +121,12 @@
 													<div class="col-lg-12">
 														<div class="mesg-area-head">
 															<div class="active-user">
-																<figure><img
+																<figure class="active-user-status"><img
 																		src="<%= messenger?.avatar ? messenger.avatar : '' %>"
 																		alt="">
 																	<span class="status f-online"></span>
 																</figure>
-																<div>
+																<div class="active-user-info">
 																	<h6 class="unread">
 																		<%= messenger ? messenger.firstName.concat(" " + messenger.lastName) : '' %></h6>
 																	<span>Online</span>

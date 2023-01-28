@@ -40,9 +40,9 @@ jQuery(document).ready(function ($) {
     });
 
   // New submit post box
-  $(".new-postbox").click(function () {
-    $(".postoverlay").fadeIn(500);
-  });
+  // $(".new-postbox").click(function () {
+  //   $(".postoverlay").fadeIn(500);
+  // });
   $(".postoverlay")
     .not(".new-postbox")
     .click(function () {

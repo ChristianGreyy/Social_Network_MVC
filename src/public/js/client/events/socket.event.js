@@ -1,3 +1,5 @@
+// COMMENT
+
 socket.off("getComments").on("getComments", (comment) => {
   console.log("socket", comment);
 
@@ -74,7 +76,7 @@ socket.on("getUpdatedPost", (newPost) => {
 
 // MESSAGE
 
-socket.on("getNewMessage", (newMessage) => {
+socket.on("getNewMessage", async (newMessage) => {
   const message = newMessage.results[0];
   const messageHelper = new MessageHelper();
 
@@ -124,6 +126,36 @@ socket.on("getNewMessage", (newMessage) => {
   </li>
   `;
   $(".conversations").html($(".conversations").html() + bonusHtml);
+
+  // Solve user chat list
+  const cookieHelper = new CookieHelper();
+  const token = cookieHelper.getCookie("jwt");
+  const response = await fetch(`/api/v1/users?status=onlineFriend`, {
+    method: "GET",
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    }),
+  });
+  const data = await response.json();
+  const userOnlineData = data.results;
+
+  const userSlug = message.sender[0].slug;
+
+  const navItem = document.querySelectorAll(".nav-item");
+  for (let i in navItem) {
+    if (isElement(navItem[i])) {
+      const aElement = navItem[i].querySelector("a");
+      let slugElement = aElement.className;
+      console.log(slugElement, userSlug);
+      if (slugElement.includes(userSlug)) {
+        navItem[i].innerHTML = messageHelper.htmlUserChatList(
+          message,
+          userOnlineData
+        );
+      }
+    }
+  }
 
   // set typing
   $(".text-area")

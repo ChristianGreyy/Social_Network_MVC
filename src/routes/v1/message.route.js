@@ -11,7 +11,7 @@ const router = express.Router();
 router
   .route("/")
   .post(
-    // auth(),
+    auth(),
     upload.single("file"),
     validate(messageValidation.createMessage),
     messageController.createMessage
@@ -26,7 +26,7 @@ router
 router
   .route("/:messageId")
   .get(
-    // auth("getMessages"),
+    auth(),
     validate(messageValidation.getMessage),
     messageController.getMessage
   )
