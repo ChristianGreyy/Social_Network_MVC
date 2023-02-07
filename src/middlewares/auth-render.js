@@ -9,6 +9,9 @@ const { tokenService } = require("../services");
 const { tokenTypes } = require("../config/tokens");
 
 exports.authRender = catchAsync(async (req, res, next) => {
+  if (req.path.includes("auth")) {
+    return next();
+  }
   let token;
   if (req.cookies.jwt) {
     token = req.cookies.jwt;

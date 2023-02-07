@@ -101,7 +101,7 @@ class MessageHelper {
         </li>
         `;
   }
-  htmlContentElement(message) {
+  htmlContentElement(message, page) {
     let contentElement;
     // Text
     if (message.text) {
@@ -113,7 +113,9 @@ class MessageHelper {
     }
     // Video
     if (message.video) {
-      contentElement = `<video controls>
+      let width;
+      if (page == "index") width = "140px";
+      contentElement = `<video controls style="width: ${width}">
         <source src="${message.video}" type="video/mp4">
       </video>`;
     }
@@ -153,7 +155,7 @@ class MessageHelper {
     const messageHelper = new MessageHelper();
 
     let senderClass = message.sender[0]._id == user.id ? "me" : "you";
-    const contentElement = messageHelper.htmlContentElement(message);
+    let contentElement = messageHelper.htmlContentElement(message, page);
     if (page == "messenger") {
       return `
           <li class="${senderClass}">

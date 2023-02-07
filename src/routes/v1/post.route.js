@@ -12,7 +12,7 @@ router
   .post(
     auth(),
     // validate(postValidation.createPost),
-    upload.single("photo"),
+    upload.single("file"),
     postController.createPost
   )
   .get(

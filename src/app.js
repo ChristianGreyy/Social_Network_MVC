@@ -36,7 +36,7 @@ app.use(
     useDefaults: false,
     directives: {
       defaultSrc: ["'self'", "https: *"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https: *"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https: *"],
       objectSrc: ["'none'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https: *"],
       fontSrc: ["'self'", "'unsafe-inline'", "https: *"],
@@ -80,7 +80,19 @@ app.use(cookieParser("hung"));
 app.use("/api/v1", apiRoutes);
 
 // view routes
-app.use(viewRoutes);
+const { authRender } = require("./middlewares/auth-render");
+const {
+  viewGetUnreadMessageNumber,
+} = require("./middlewares/message.middleware");
+const {
+  viewGetUnreadNotificationNumber,
+} = require("./middlewares/notification.middleware");
+app.use(
+  authRender,
+  viewGetUnreadMessageNumber,
+  viewGetUnreadNotificationNumber,
+  viewRoutes
+);
 
 app.get("/favicon.ico", (req, res, next) => {
   return next();

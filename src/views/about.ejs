@@ -452,30 +452,13 @@
 																		<%= user.hoobies %>
 																	</p>
 																</div>
-																<div class="gen-metabox">
-																	<span><i class="fa fa-plus"></i> Others
-																		Interests</span>
-																	<p>
-																		<%= user.othersInterests %>
-																	</p>
-																</div>
 															</div>
 															<div class="col-lg-6">
 																<div class="gen-metabox">
 																	<span><i class="fa fa-mortar-board"></i>
 																		Education</span>
 																	<p>
-																		<%= user.education %><a href="#" title="">Oxford
-																				Uniersity,
-																				London</a>
-																	</p>
-																</div>
-																<div class="gen-metabox">
-																	<span><i class="fa fa-certificate"></i> Work and
-																		experience</span>
-																	<p>
-																		<%= user.work %><a href="#" title="">Senior
-																				UI/UX Designer</a>
+																		<%= user.education %>
 																	</p>
 																</div>
 															</div>
@@ -665,121 +648,32 @@
 														</ul>
 													</div><!-- friends list -->
 													<div class="central-meta">
-														<span class="create-post">Photos (580) <a
-																href="timeline-photos.html" title="">See All</a></span>
+														<span class="create-post">Photos (<%= imagePost.length %>) <a
+																	href="timeline-photos.html" title="">See
+																	All</a></span>
 														<ul class="photos-list">
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-22.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo2.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>15</span>
+															<% imagePost.forEach(post=> { %>
+																<li
+																	style="overflow: hidden; height: 170px; display: flex; align-items: center;">
+																	<div class="item-box">
+																		<a class="strip" href="<%= post.photo %>"
+																			title="" data-strip-group="mygroup"
+																			data-strip-group-options="loop: false">
+																			<img src="<%= post.photo %>" alt=""></a>
+																		<div class="over-photo">
+																			<div class="likes heart"
+																				title="Like/Dislike">❤
+																				<span>
+																					<%= post.likes.length %>
+																				</span>
+																			</div>
+																			<span class="over-photo-createdAt">
+																				<%= post.createdAt %>
+																			</span>
 																		</div>
-																		<span>20 hours ago</span>
 																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-33.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo3.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>20</span>
-																		</div>
-																		<span>20 days ago</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-44.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo4.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>155</span>
-																		</div>
-																		<span>Yesterday</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-55.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo5.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>201</span>
-																		</div>
-																		<span>3 weeks ago</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-66.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo6.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>81</span>
-																		</div>
-																		<span>2 months ago</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-77.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo7.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>98</span>
-																		</div>
-																		<span>1 day</span>
-																	</div>
-																</div>
-															</li>
-															<li>
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-88.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo8.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<div class="likes heart" title="Like/Dislike">❤
-																			<span>87</span>
-																		</div>
-																		<span>23 hours ago</span>
-																	</div>
-																</div>
-															</li>
+																</li>
+																<% }) %>
 														</ul>
 													</div>
 													<div class="central-meta">
@@ -1127,3 +1021,12 @@
 	</html>
 
 	<%- include('./includes/end.ejs') %>
+		<script>
+			let createdElement = document.querySelectorAll('.over-photo-createdAt');
+			console.log(createdElement)
+			createdElement.forEach(time => {
+				time.textContent = moment(time.textContent).from()
+				console.log(time.textContent)
+			})
+			// $('.over-photo-createdAt').text(moment($('.over-photo-createdAt').text()).from())
+		</script>

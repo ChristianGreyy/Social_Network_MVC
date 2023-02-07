@@ -9,6 +9,8 @@ const {
   apiGetOnlinefriend,
 } = require("../../middlewares/user.middleware");
 
+const upload = require("../../config/multer");
+
 const router = express.Router();
 
 router
@@ -36,6 +38,8 @@ router
   )
   .patch(
     // auth("manageUsers"),
+    auth(),
+    upload.single("file"),
     validate(userValidation.updateUser),
     userController.updateUser
   )

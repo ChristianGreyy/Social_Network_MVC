@@ -259,7 +259,8 @@ class UserEvent {
     });
   }
   handleRenderNotifications() {
-    $(".top-area > .setting-area > li > a").on("click", async function () {
+    $(".top-area > .setting-area > li > a").on("click", async function (e) {
+      e.preventDefault();
       const userEvent = new UserEvent();
       const cookieHelper = new CookieHelper();
       const messageHelper = new MessageHelper();
@@ -318,171 +319,181 @@ class UserEvent {
       }
       // Message notifications
       else if ($parent.hasClass("message-item")) {
-        if (!dropdown.hasClass("active")) {
-          const response = await Promise.all([
-            await fetch(
-              `/api/v1/messages?sortBy=createdAt:desc&populatePk=users.sender,users.receiver,documents.document`,
-              {
+        if (!window.location.href.includes("chat-messenger")) {
+          if (!dropdown.hasClass("active")) {
+            const response = await Promise.all([
+              await fetch(
+                `/api/v1/messages?sortBy=createdAt:desc&populatePk=users.sender,users.receiver,documents.document`,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                  },
+                }
+              ),
+              await fetch(`/api/v1/users?status=onlineFriend`, {
                 method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
+                headers: new Headers({
                   Authorization: "Bearer " + token,
-                },
-              }
-            ),
-            await fetch(`/api/v1/users?status=onlineFriend`, {
-              method: "GET",
-              headers: new Headers({
-                Authorization: "Bearer " + token,
-                "Content-Type": "application/json",
+                  "Content-Type": "application/json",
+                }),
               }),
-            }),
-          ]);
-          const [response1, response2] = response;
+            ]);
+            const [response1, response2] = response;
 
-          if (response1.status == 200 && response2.status == 200) {
-            const data1 = await response1.json();
-            const data2 = await response2.json();
+            if (response1.status == 200 && response2.status == 200) {
+              const data1 = await response1.json();
+              const data2 = await response2.json();
 
-            const messagesData = data1.results;
-            const userOnlineData = data2.results;
-            const userMessages = [];
-            const messages = messagesData.filter((message) => {
-              if (
-                !userMessages.find((userMessage) => {
-                  return (
-                    userMessage.includes(message.sender[0]._id) &&
-                    userMessage.includes(message.receiver[0]._id)
-                  );
-                })
-              ) {
-                userMessages.push([
-                  message.sender[0]._id,
-                  message.receiver[0]._id,
-                ]);
-                return message;
-              }
-            });
-            let html = messages.map((msg) => {
-              return messageHelper.htmlUserChatList(msg, userOnlineData);
-            });
-            $(dropdown).find(".drops-menu").html(html);
-
-            // Handle click messenger
-            $(".nav-item")
-              .find("a#nav-item-messenger")
-              .on("click", async (e) => {
-                e.preventDefault();
-                const messengerSlug = e.currentTarget.className;
-
-                const response = await Promise.all([
-                  await fetch(
-                    `/api/v1/messages?sortBy=createdAt:asc&populatePk=users.sender,users.receiver,documents.document&friend=${messengerSlug}`,
-                    {
-                      method: "GET",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token,
-                      },
-                    }
-                  ),
-                  await fetch(`/api/v1/users?status=onlineFriend`, {
-                    method: "GET",
-                    headers: new Headers({
-                      Authorization: "Bearer " + token,
-                      "Content-Type": "application/json",
-                    }),
-                  }),
-                ]);
-                const [response1, response2] = response;
-
-                if (response1.status == 200 && response2.status == 200) {
-                  const data1 = await response1.json();
-                  const data2 = await response2.json();
-                  const messages = data1.results;
-                  const userOnlineData = data2.results.map((user) => user.id);
-                  console.log(messages);
-                  let userMessenger;
-                  if (messages[messages.length - 1].sender[0]._id != user.id) {
-                    // Update api message status of user
-                    if (messages[messages.length - 1].read == false) {
-                      const response3 = await fetch(
-                        `/api/v1/messages/${messages[messages.length - 1]._id}`,
-                        {
-                          method: "PATCH",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + token,
-                          },
-                          body: JSON.stringify({
-                            read: true,
-                          }), // body data type must match "Content-Type" header
-                        }
-                      );
-                    }
-                    userMessenger = messages[messages.length - 1].sender[0];
-                  } else {
-                    userMessenger = messages[messages.length - 1].receiver[0];
-                  }
-
-                  // Render messenger message
-                  let html = messages.map((msg) => {
-                    return messageHelper.htmlMessengerMessage(msg, "index");
-                  });
-
-                  $(".conversations").html(html.join(""));
-
-                  // set scroll bar is bottom
-                  let messageBody = document.querySelector(".conversations");
-                  messageBody.scrollTop =
-                    messageBody.scrollHeight - messageBody.clientHeight;
+              const messagesData = data1.results;
+              const userOnlineData = data2.results;
+              const userMessages = [];
+              const messages = messagesData.filter((message) => {
+                if (
+                  !userMessages.find((userMessage) => {
+                    return (
+                      userMessage.includes(message.sender[0]._id) &&
+                      userMessage.includes(message.receiver[0]._id)
+                    );
+                  })
+                ) {
+                  userMessages.push([
+                    message.sender[0]._id,
+                    message.receiver[0]._id,
+                  ]);
+                  return message;
                 }
               });
-          }
+              let html = messages.map((msg) => {
+                return messageHelper.htmlUserChatList(msg, userOnlineData);
+              });
+              $(dropdown).find(".drops-menu").html(html);
 
-          // const response = await fetch(`/api/v1/users?status=request`, {
-          //   method: "GET",
-          //   headers: new Headers({
-          //     Authorization: "Bearer " + token,
-          //     "Content-Type": "application/json",
-          //   }),
-          // });
-          // if (response.status == 200) {
-          //   const data = await response.json();
-          //   const users = data.results;
-          //   console.log(users);
-          //   let html = users.map((user) => {
-          //     return `
-          //       <li>
-          //         <div>
-          //             <figure>
-          //                 <img style="height: 40px; width: 40px;" src="${
-          //                   user.avatar
-          //                 }" alt="">
-          //             </figure>
-          //             <div class="mesg-meta">
-          //                 <h6><a href="#" title="">${user.firstName.concat(
-          //                   " " + user.lastName
-          //                 )}</a></h6>
-          //                 <span><b>Amy</b> is mutule friend</span>
-          //                 <i>yesterday</i>
-          //             </div>
-          //             <div class="add-del-friends">
-          //                 <a onclick="(function(){
-          //               alert('Hey i am calling');
-          //               return false;
-          //           })()" class="add-tofrndlist-add" href="#" title=""><i class="fa fa-heart"></i></a>
-          //                 <a class="add-tofrndlist-remove" href="#" title=""><i class="fa fa-trash"></i></a>
-          //             </div>
-          //         </div>
-          //     </li>
-          //     `;
-          //   });
-          //   $(dropdown).find(".drops-menu").html(html);
-          //   $parent.find(".bg-red").text(users.length);
-          // }
+              // Handle click messenger
+              $(".nav-item")
+                .find("a#nav-item-messenger")
+                .on("click", async (e) => {
+                  e.preventDefault();
+                  $(".chat-box").addClass("show");
+                  const messengerSlug = e.currentTarget.className;
+
+                  const response = await Promise.all([
+                    await fetch(
+                      `/api/v1/messages?sortBy=createdAt:asc&populatePk=users.sender,users.receiver,documents.document&friend=${messengerSlug}`,
+                      {
+                        method: "GET",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: "Bearer " + token,
+                        },
+                      }
+                    ),
+                    await fetch(`/api/v1/users?status=onlineFriend`, {
+                      method: "GET",
+                      headers: new Headers({
+                        Authorization: "Bearer " + token,
+                        "Content-Type": "application/json",
+                      }),
+                    }),
+                  ]);
+                  const [response1, response2] = response;
+
+                  if (response1.status == 200 && response2.status == 200) {
+                    const data1 = await response1.json();
+                    const data2 = await response2.json();
+                    const messages = data1.results;
+                    const userOnlineData = data2.results.map((user) => user.id);
+                    let userMessenger;
+                    if (
+                      messages[messages.length - 1].sender[0]._id != user.id
+                    ) {
+                      // Update api message status of user
+                      if (messages[messages.length - 1].read == false) {
+                        console.log("okkkkkkkk");
+                        const response3 = await fetch(
+                          `/api/v1/messages/${
+                            messages[messages.length - 1]._id
+                          }`,
+                          {
+                            method: "PATCH",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: "Bearer " + token,
+                            },
+                            body: JSON.stringify({
+                              read: true,
+                            }), // body data type must match "Content-Type" header
+                          }
+                        );
+                      }
+                      userMessenger = messages[messages.length - 1].sender[0];
+                    } else {
+                      userMessenger = messages[messages.length - 1].receiver[0];
+                    }
+
+                    // Render messenger message
+                    let html = messages.map((msg) => {
+                      return messageHelper.htmlMessengerMessage(msg, "index");
+                    });
+
+                    $(".chat-head").find("h6").text(userMessenger.firstName);
+
+                    $(".conversations-index").html(html.join(""));
+
+                    if (userOnlineData.includes(userMessenger._id)) {
+                      $(".chat-box")
+                        .find("span.status")
+                        .attr("class", "status f-online");
+                    } else {
+                      console.log($(".chat-box").find("span.status"));
+                      $(".chat-box")
+                        .find("span.status")
+                        .attr("class", "status f-offline");
+                    }
+
+                    // submit message
+                    userMessenger.id = userMessenger._id;
+                    const messageEvent = new MessageEvent();
+                    messageEvent.handleSubmitMessage(userMessenger);
+
+                    // set scroll bar is bottom
+                    let messageBody = document.querySelector(
+                      ".conversations-index"
+                    );
+                    messageBody.scrollTop =
+                      messageBody.scrollHeight - messageBody.clientHeight;
+                  }
+                });
+            }
+          }
+        }
+      } else if ($parent.hasClass("notification-item")) {
+        if (!dropdown.hasClass("active")) {
+          const notificationHelper = new NotificationHelper();
+          const response = await await fetch(
+            `/api/v1/notifications?sortBy=createdAt:desc&receiver=${user.id}&populatePk=users.sender`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+            }
+          );
+
+          const data = await response.json();
+          const notifications = data.results;
+          const html = notifications.map((noti) => {
+            let sender = noti.sender[0];
+            return notificationHelper.htmlNotifications(noti, sender);
+          });
+          console.log($(dropdown).find(".drops-menu"));
+          console.log(html.join(""));
+          $(dropdown).find(".drops-menu").html(html.join(""));
         }
       }
+
       $(this)
         .addClass("active")
         .parent()
@@ -549,12 +560,56 @@ class UserEvent {
           return userHelper.htmlOnlineFriend(friend);
         });
         $(".chat-users").html(html.join(""));
-
-        console.log(friends);
       }
     } catch (e) {
       console.log(e);
       userHelper.handleErrorToast("Lỗi server", "Xin vui lòng thử lại");
     }
+  }
+
+  async handleUpdateUser() {
+    let file = "";
+    $(".fileContainer-avatar").on("change", (e) => {
+      $(".change-photo")
+        .find("img")
+        .attr("src", URL.createObjectURL(e.target.files[0]));
+      file = e.target.files[0];
+    });
+
+    $(".updateUser").on("submit", async (e) => {
+      e.preventDefault();
+      const cookieHelper = new CookieHelper();
+      const token = cookieHelper.getCookie("jwt");
+      const dataArray = $(".updateUser").serializeArray();
+      const updatedUser = new FormData();
+      dataArray.forEach((data) => {
+        if (data.value) {
+          if (data.name == "birthday") {
+            console.log(data.value);
+            let [year, month, day] = data.value.split("-");
+            updatedUser.append("month", month);
+            updatedUser.append("day", day);
+            updatedUser.append("year", year);
+          } else {
+            updatedUser.append(data.name, data.value);
+          }
+        }
+      });
+      if (file) {
+        updatedUser.append("file", file);
+      }
+
+      const response = await fetch(`/api/v1/users/${user.id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: updatedUser,
+      });
+
+      if (response.status == 200) {
+        location.reload();
+      }
+    });
   }
 }

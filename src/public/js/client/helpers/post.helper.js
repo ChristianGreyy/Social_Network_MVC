@@ -3,7 +3,9 @@ class PostHelper {
     let res = `
     <div class="central-meta item">
       <div class="user-post">
-        <input type="hidden" class="postId" value="${post.id}">
+        <input type="hidden" class="postId" value="${
+          post.id ? post.id : post._id
+        }">
         <div class="friend-info">
           <!-- Avatar author -->
           <figure>

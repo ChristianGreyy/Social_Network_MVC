@@ -2539,7 +2539,7 @@ li.post-comment .comet-avatar {
 }
 
 .smiles-bunch.active {
-  display: block;
+  display: flex;
 }
 
 .smiles-bunch > i {
@@ -4950,7 +4950,7 @@ canvas {
 .chat-list > ul {
   margin: 0;
   padding-left: 0;
-  max-height: 290px;
+  /* max-height: 290px; */
   overflow: hidden;
   position: relative;
   padding-right: 8px;
@@ -15682,6 +15682,7 @@ a.shopping-cart > i {
   width: 100%;
 }
 
+.conversations-index > li.you,
 .conversations > li.you {
   display: flex;
 }
@@ -15714,10 +15715,12 @@ a.shopping-cart > i {
   position: relative;
   color: #838195;
 }
+.conversations-index > li.me .text-box > p,
 .conversations > li.me .text-box > p {
   text-align: left;
   background: #dbf4fd;
 }
+.conversations-index > li figure img,
 .conversations > li figure img {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 100%;
@@ -15756,14 +15759,17 @@ a.shopping-cart > i {
   color: #23d2e2;
   margin-left: -7px;
 }
+.conversations-index > li.me,
 .conversations > li.me {
   text-align: right;
 }
+.conversations-index > li.me .text-box,
 .conversations > li.me .text-box {
   float: right;
   margin-left: 0;
   margin-right: 10px;
 }
+.conversations-index > li.me > figure,
 .conversations > li.me > figure {
   float: right;
 }

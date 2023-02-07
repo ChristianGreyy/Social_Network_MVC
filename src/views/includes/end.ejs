@@ -6,17 +6,21 @@
 <script src="/js/toast-notificatons.js"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/client/logout.js"></script>
+
 <!-- helpers -->
 <script src="/js/client/helpers/cookie.helper.js"></script>
 <script src="/js/client/helpers/post.helper.js"></script>
 <script src="/js/client/helpers/comment.helper.js"></script>
-<script src="/js/client/helpers/user.helper.js"></script>
 <script src="/js/client/helpers/message.helper.js"></script>
+<script src="/js/client/helpers/user.helper.js"></script>
+<script src="/js/client/helpers/notification.helper.js"></script>
 <!-- events -->
 <script src="/js/client/events/post.event.js"></script>
 <script src="/js/client/events/comment.event.js"></script>
-<script src="/js/client/events/user.event.js"></script>
 <script src="/js/client/events/message.event.js"></script>
+<script src="/js/client/events/notification.event.js"></script>
+<script src="/js/client/events/user.event.js"></script>
 <script>
     //Returns true if it is a DOM node
     function isNode(o) {
@@ -39,4 +43,3 @@
     userEvent.handleRenderNotifications()
 </script>
 <script src="/js/client/events/socket.event.js"></script>
-<script src="/js/client/logout.js"></script>

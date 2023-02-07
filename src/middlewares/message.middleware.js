@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { User } = require("../models");
+const { User, Message } = require("../models");
 
 exports.apiGetFriendMessage = async (req, res, next) => {
   if (req.query.friend) {
@@ -36,5 +36,34 @@ exports.apiGetFriendMessage = async (req, res, next) => {
       },
     ];
   }
+  return next();
+};
+
+exports.viewGetUnreadMessageNumber = async (req, res, next) => {
+  if (req.path.includes("auth")) return next();
+  let messages = await Message.find({
+    $or: [
+      {
+        receiver: req.user.id,
+      },
+      {
+        sender: req.user.id,
+      },
+    ],
+  }).sort({ createdAt: -1 });
+
+  let checkedUser = [];
+  messages = messages.filter((msg) => {
+    const messengerId = msg.receiver == req.user.id ? msg.sender : msg.receiver;
+    if (!checkedUser.includes(messengerId.toString())) {
+      checkedUser.push(messengerId.toString());
+      return msg;
+    }
+  });
+
+  let unReadNumber = messages.filter(
+    (msg) => msg.read == false && msg.sender != req.user.id
+  ).length;
+  req.unReadNumber = unReadNumber;
   return next();
 };

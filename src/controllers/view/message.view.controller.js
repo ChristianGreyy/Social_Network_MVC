@@ -7,10 +7,12 @@ const messenger = catchAsync(async (req, res) => {
   const messenger = await User.findOne({ slug: userSlug });
   console.log(messenger);
   res.render("chat-messenger", {
-    title: "Trang chủ",
+    title: "Messenger",
     heading: "NEWSFEED",
     likesTotal: req.likesTotal,
     messenger: messenger,
+    unReadNumber: req.unReadNumber,
+    unReadNotiNumber: req.unReadNotiNumber,
   });
 });
 

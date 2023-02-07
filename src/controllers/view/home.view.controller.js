@@ -6,6 +6,8 @@ const home = catchAsync(async (req, res) => {
     title: "Trang chủ",
     heading: "NEWSFEED",
     likesTotal: req.likesTotal,
+    unReadNumber: req.unReadNumber,
+    unReadNotiNumber: req.unReadNotiNumber,
   });
 });
 

@@ -90,12 +90,18 @@ class PostEvent {
       const cookieHelper = new CookieHelper();
       const token = cookieHelper.getCookie("jwt");
       const photo = $(".attachments-image")[0].files[0];
+      const video = $(".attachments-video")[0].files[0];
       // const text = $(".newpst-input").find("textarea").val();
       const text = editor.getData();
       let createdPost = new FormData();
       createdPost.append("content", text);
       createdPost.append("author", userId);
-      createdPost.append("photo", photo);
+      if (photo) {
+        createdPost.append("file", photo);
+      }
+      if (video) {
+        createdPost.append("file", video);
+      }
 
       try {
         const response = await fetch("/api/v1/posts", {
@@ -319,5 +325,40 @@ class PostEvent {
     commentEvent.handleRenderComment();
     const postEvent = new PostEvent();
     postEvent.handleUpdatePost(posts);
+  }
+
+  async handlePostDetail(post) {
+    let postDoc;
+    // get token
+    const cookieHelper = new CookieHelper();
+    const token = cookieHelper.getCookie("jwt");
+    const response = await fetch(
+      `/api/v1/posts?_id=${post.id}&populateFk=comments.post&populatePk=users.author`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    if (response.status == 200) {
+      const data = await response.json();
+      postDoc = data.results[0];
+    }
+    console.log(postDoc);
+    const postHelper = new PostHelper();
+    const html = postHelper.solveRenderHTMLPost(postDoc, user, user);
+    document.querySelector(".loadMore").innerHTML = html;
+
+    // Render comments & Creat comment
+    const commentEvent = new CommentEvent();
+    commentEvent.handleRenderComment();
+    const postEvent = new PostEvent();
+    postEvent.handleUpdatePost();
+
+    const desElement = document.querySelector(".description");
+    const pElement = desElement.querySelector("p");
+    pElement.innerHTML = pElement.innerText;
   }
 }

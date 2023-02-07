@@ -380,7 +380,7 @@
 																<ul class="naves">
 																	<li>
 																		<i class="ti-clipboard"></i>
-																		<a href="newsfeed.html" title="">News feed</a>
+																		<a href="/" title="">News feed</a>
 																	</li>
 																	<li>
 																		<i class="ti-mouse-alt"></i>
@@ -392,40 +392,32 @@
 																	</li>
 																	<li>
 																		<i class="ti-user"></i>
-																		<a href="timeline-friends.html"
+																		<a href="/user/<%= user.slug %>/friends"
 																			title="">friends</a>
 																	</li>
 																	<li>
 																		<i class="ti-image"></i>
-																		<a href="timeline-photos.html"
+																		<a href="/user/<%= user.slug %>/photos"
 																			title="">images</a>
 																	</li>
 																	<li>
 																		<i class="ti-video-camera"></i>
-																		<a href="timeline-videos.html"
+																		<a href="/user/<%= user.slug %>/videos"
 																			title="">videos</a>
 																	</li>
 																	<li>
 																		<i class="ti-comments-smiley"></i>
-																		<a href="messages.html" title="">Messages</a>
+																		<a href="/chat-messenger" title="">Messages</a>
 																	</li>
 																	<li>
 																		<i class="ti-bell"></i>
-																		<a href="notifications.html"
+																		<a href="/notifications"
 																			title="">Notifications</a>
 																	</li>
 																	<li>
-																		<i class="ti-share"></i>
-																		<a href="people-nearby.html" title="">People
-																			Nearby</a>
-																	</li>
-																	<li>
-																		<i class="fa fa-bar-chart-o"></i>
-																		<a href="insights.html" title="">insights</a>
-																	</li>
-																	<li>
 																		<i class="ti-power-off"></i>
-																		<a href="landing.html" title="">Logout</a>
+																		<a id="logout" href="landing.html"
+																			title="">Logout</a>
 																	</li>
 																</ul>
 															</div><!-- Shortcuts -->
@@ -589,13 +581,13 @@
 																						type="file">
 																				</label>
 																			</li>
-																			<li>
+																			<!-- <li>
 																				<i class="fa fa-camera"></i>
 																				<label class="fileContainer">
 																					<input class="attachments-camera"
 																						type="file">
 																				</label>
-																			</li>
+																			</li> -->
 																			<li class="preview-btn">
 																				<button class="post-btn-preview"
 																					type="submit"
@@ -756,213 +748,7 @@
 																	<!-- posts is called here -->
 																</div>
 													</div><!-- centerl meta -->
-													<div class="col-lg-3">
-														<aside class="sidebar static right">
-															<div class="widget">
-																<h4 class="widget-title">Your page</h4>
-																<div class="your-page">
-																	<figure>
-																		<a href="#" title=""><img
-																				src="<%= user.avatar %>" alt=""></a>
-																	</figure>
-																	<div class="page-meta">
-																		<a href="/user/<%= user.slug %>" title=""
-																			class="underline">My
-																			Creative
-																			Page</a>
-																		<span><i class="ti-comment"></i><a
-																				href="/chat-messenger" title="">Messages
-																				<em>9</em></a></span>
-																		<span><i class="ti-bell"></i><a
-																				href="insight.html"
-																				title="">Notifications
-																				<em>2</em></a></span>
-																	</div>
-																	<ul class="page-publishes">
-																		<li>
-																			<span><i
-																					class="ti-pencil-alt"></i>Publish</span>
-																		</li>
-																		<li>
-																			<span><i class="ti-camera"></i>Photo</span>
-																		</li>
-																		<li>
-																			<span><i
-																					class="ti-video-camera"></i>Live</span>
-																		</li>
-																		<li>
-																			<span><i
-																					class="fa fa-user-plus"></i>Invite</span>
-																		</li>
-																	</ul>
-																	<div class="page-likes">
-																		<ul class="nav nav-tabs likes-btn">
-																			<li class="nav-item"><a class="active"
-																					href="#link1" data-toggle="tab"
-																					data-ripple="">likes</a>
-																			</li>
-																			<li class="nav-item"><a class=""
-																					href="#link2" data-toggle="tab"
-																					data-ripple="">views</a>
-																			</li>
-																		</ul>
-																		<!-- Tab panes -->
-																		<div class="tab-content">
-																			<div class="tab-pane active fade show "
-																				id="link1">
-																				<span><i class="ti-heart"></i>
-																					<%= likesTotal %>
-																				</span>
-																				<a href="#" title="weekly-likes">0 new
-																					likes
-																					this
-																					week</a>
-																				<div class="users-thumb-list">
-																					<a href="#" title="Anderw"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-1.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="frank"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-2.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Sara"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-3.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Amy"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-4.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Ema"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-5.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Sophie"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-6.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Maria"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-7.jpg"
-																							alt="">
-																					</a>
-																				</div>
-																			</div>
-																			<div class="tab-pane fade" id="link2">
-																				<span><i
-																						class="fa fa-eye"></i>440</span>
-																				<a href="#" title="weekly-likes">440 new
-																					views
-																					this
-																					week</a>
-																				<div class="users-thumb-list">
-																					<a href="#" title="Anderw"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-1.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="frank"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-2.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Sara"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-3.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Amy"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-4.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Ema"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-5.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Sophie"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-6.jpg"
-																							alt="">
-																					</a>
-																					<a href="#" title="Maria"
-																						data-toggle="tooltip">
-																						<img src="/images/resources/userlist-7.jpg"
-																							alt="">
-																					</a>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div><!-- page like widget -->
-															<div class="widget">
-																<h4 class="widget-title">Profile intro</h4>
-																<ul class="short-profile">
-																	<li>
-																		<span>about</span>
-																		<p>Hi, i am jhon kates, i am 32 years old and
-																			worked
-																			as
-																			a
-																			web
-																			developer in microsoft </p>
-																	</li>
-																	<li>
-																		<span>fav tv show</span>
-																		<p>Sacred Games, Spartcus Blood, Games of Theron
-																		</p>
-																	</li>
-																	<li>
-																		<span>favourit music</span>
-																		<p>Justin Biber, Shakira, Nati Natasah</p>
-																	</li>
-																</ul>
-															</div>
-															<div class="widget">
-																<div class="banner medium-opacity purple">
-																	<div class="bg-image"
-																		style="background-image: url(/images/resources/baner-widgetbg.jpg)">
-																	</div>
-																	<div class="baner-top">
-																		<span><img alt=""
-																				src="/images/book-icon.png"></span>
-																		<i class="fa fa-ellipsis-h"></i>
-																	</div>
-																	<div class="banermeta">
-																		<p>
-																			create your own favourit page.
-																		</p>
-																		<span>like them all</span>
-																		<a data-ripple="" title="" href="#">start
-																			now!</a>
-																	</div>
-																</div>
-															</div>
-															<div class="widget pitnik-links stick-widget">
-																<ul>
-																	<li><a href="#" title="">about</a></li>
-																	<li><a href="#" title="">career</a></li>
-																	<li><a href="#" title="">advertise</a></li>
-																	<li><a href="#" title="">Pitnik Apps</a></li>
-																	<li><a href="#" title="">Pitnik Blog</a></li>
-																	<li><a href="#" title="">Help</a></li>
-																	<li><a href="#" title="">Pitnik Gifts</a></li>
-																	<li><a href="#" title="">contetn policy</a></li>
-																	<li><a href="#" title="">User Policy</a></li>
-																</ul>
-																<p>© Pitnik 2020. All Rights Reserved.</p>
-															</div><!-- little links -->
-														</aside>
-													</div><!-- sidebar -->
+													<%- include('./layouts/userRightSidebarMenu.ejs') %>
 											</div>
 										</div>
 									</div>
@@ -1293,34 +1079,21 @@
 
 	</html>
 
+	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.0/classic/ckeditor.js"></script>
+
+	<script>
+		ClassicEditor
+			.create(document.querySelector('#editor'))
+			.catch(error => {
+				console.error(error);
+			});
+	</script>
+
 	<%- include('./includes/end.ejs') %>
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
 		<script src="/js/locationpicker.jquery.js"></script>
 		<script src="/js/map-init.js"></script>
-		<!-- <script>
-			jQuery(document).ready(function ($) {
-				$('#us3').locationpicker({
-					location: {
-						latitude: -8.681013,
-						longitude: 115.23506410000005
-					},
-					radius: 0,
-					inputBinding: {
-						latitudeInput: $('#us3-lat'),
-						longitudeInput: $('#us3-lon'),
-						radiusInput: $('#us3-radius'),
-						locationNameInput: $('#us3-address')
-					},
-					enableAutocomplete: true,
-					onchanged: function (currentLocation, radius, isMarkerDropped) {
-						// Uncomment line below to show alert on each Location Changed event
-						//alert("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
-					}
-				});
-
-			});	
-		</script> -->
 
 		<script>
 			const remoteUser = JSON.parse('<%- JSON.stringify(remoteUser) %>');

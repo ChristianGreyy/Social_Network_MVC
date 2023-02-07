@@ -26,6 +26,12 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
+  console.log(req.storeFile);
+  if (req.file) {
+    req.body["avatar"] = `/resources/${req.storeFile + "s"}/`.concat(
+      req.file.path.split("/")[req.file.path.split("/").length - 1]
+    );
+  }
   const user = await userService.updateUserById(req.params.userId, req.body);
   // socket.getIo().emit("get", user);
 

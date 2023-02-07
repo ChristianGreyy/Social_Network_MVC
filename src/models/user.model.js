@@ -101,19 +101,16 @@ const userSchema = mongoose.Schema(
     address: {
       type: String,
     },
+    country: {
+      type: String,
+    },
     occupation: {
       type: String,
     },
     hobbies: {
       type: String,
     },
-    othersInterests: {
-      type: String,
-    },
     education: {
-      type: String,
-    },
-    work: {
       type: String,
     },
     followers: [

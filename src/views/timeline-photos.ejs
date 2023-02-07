@@ -476,7 +476,9 @@
 															<div class="row">
 																<div class="col-lg-6">
 																	<div class="align-left">
-																		<h5>Photos <span>62</span></h5>
+																		<h5>Photos <span>
+																				<%= imagePost.length %>
+																			</span></h5>
 																	</div>
 																</div>
 																<div class="col-lg-6">
@@ -526,7 +528,8 @@
 													</div><!-- title block -->
 													<div class="central-meta">
 														<div class="row merged5">
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6"
+																style=" height: 190px;">
 																<div class="item-box">
 																	<div class="item-upload album">
 																		<i class="fa fa-plus-circle"></i>
@@ -537,231 +540,23 @@
 																	</div>
 																</div>
 															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-101.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo1.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			15</a>
-																		<span>20 hours ago</span>
+															<% imagePost.forEach(post=> { %>
+																<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6"
+																	style="overflow: hidden; height: 190px; display: flex; align-items: center">
+																	<div class="item-box">
+																		<a class="strip" href="<%= post.photo %>"
+																			title="" data-strip-group="mygroup"
+																			data-strip-group-options="loop: false">
+																			<img src="<%= post.photo %>" alt=""></a>
+																		<div class="over-photo">
+																			<a href="#" title=""><i
+																					class="fa fa-heart"></i>
+																				15</a>
+																			<span>20 hours ago</span>
+																		</div>
 																	</div>
 																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-22.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo2.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			20</a>
-																		<span>20 days ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-33.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo3.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			155</a>
-																		<span>Yesterday</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-44.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo4.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			201</a>
-																		<span>3 weeks ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-55.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo5.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			81</a>
-																		<span>2 months ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-66.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo6.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			98</a>
-																		<span>1 day</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-77.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo7.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			87</a>
-																		<span>23 hours ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-88.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo8.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			60</a>
-																		<span>3 days ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-99.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo9.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			897</a>
-																		<span>1 year ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1001.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo10.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			983</a>
-																		<span>2 years ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1011.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo11.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			40</a>
-																		<span>4 days ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1012.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo12.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			15</a>
-																		<span>20 hours ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1013.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo13.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			59</a>
-																		<span>20 days ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1014.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo14.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			66</a>
-																		<span>1 year ago</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-																<div class="item-box">
-																	<a class="strip"
-																		href="/images/resources/photo-1015.jpg" title=""
-																		data-strip-group="mygroup"
-																		data-strip-group-options="loop: false">
-																		<img src="/images/resources/photo15.jpg"
-																			alt=""></a>
-																	<div class="over-photo">
-																		<a href="#" title=""><i class="fa fa-heart"></i>
-																			98</a>
-																		<span>9 months ago</span>
-																	</div>
-																</div>
-															</div>
+																<% }) %>
 														</div>
 
 														<div class="lodmore">

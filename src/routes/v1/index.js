@@ -4,6 +4,7 @@ const userRoute = require("./user.route");
 const postRoute = require("./post.route");
 const messageRoute = require("./message.route");
 const commentRoute = require("./comment.route");
+const notificationRoute = require("./notification.route");
 const docsRoute = require("./docs.route");
 const opitonRoute = require("./option.route");
 const config = require("../../config/config");
@@ -30,6 +31,10 @@ const defaultRoutes = [
   {
     path: "/messages",
     route: messageRoute,
+  },
+  {
+    path: "/notifications",
+    route: notificationRoute,
   },
   {
     path: "/options",

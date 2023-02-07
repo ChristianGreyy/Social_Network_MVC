@@ -156,7 +156,7 @@ class MessageEvent {
 
         // Render messenger message
         let html = messages.map((msg) => {
-          return messageHelper.htmlMessengerMessage(msg, "index");
+          return messageHelper.htmlMessengerMessage(msg, "messenger");
         });
         $(".conversations").html(html.join(""));
 
@@ -168,7 +168,7 @@ class MessageEvent {
     }
   }
 
-  async handleSubmitMessage() {
+  async handleSubmitMessage(messenger) {
     // use emojies
     $(".emojies-list")
       .find("li")
@@ -315,12 +315,19 @@ class MessageEvent {
       .find("form")
       .on("submit", async function (e) {
         e.preventDefault();
+
         const cookieHelper = new CookieHelper();
         const token = cookieHelper.getCookie("jwt");
         const text = $(".text-area")?.find("input")?.[0]?.value;
         const receiverId = messenger.id;
         const senderId = user.id;
         const file = $(".fileContainer")?.find("input")?.[0]?.files?.[0];
+
+        // console.log("text", text);
+        // console.log("receiverId", receiverId);
+        // console.log("senderId", senderId);
+
+        // return;
 
         let createdMessage = new FormData();
         if (text) {
@@ -331,8 +338,6 @@ class MessageEvent {
         }
         createdMessage.append("receiver", receiverId);
         createdMessage.append("sender", senderId);
-
-        // return;
 
         const response = await Promise.all([
           await fetch(`/api/v1/messages`, {

@@ -30,6 +30,7 @@ class CommentEvent {
         .slideToggle("slow");
       let userPostElement = $(this).closest(".user-post");
       let postIdElement = userPostElement.find(".postId");
+      console.log(postIdElement);
       let postId = postIdElement.val();
       const cookieHelper = new CookieHelper();
       const token = cookieHelper.getCookie("jwt");
