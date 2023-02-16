@@ -1,5 +1,53 @@
 class PostHelper {
   solveRenderHTMLPost(post, remoteUser, user) {
+    post.likes.reverse();
+
+    const likedUsers = post.likes.filter((user, index) => {
+      return index <= 4;
+    });
+
+    let likedUsersName = [];
+
+    let likedUsersHtml = likedUsers
+      .map((user, index) => {
+        if (index <= 1) {
+          likedUsersName.push(user.firstName);
+        }
+        return `
+        <a  data-toggle="tooltip" title="${user.firstName}"
+          href="/user/${user.slug}">
+          <img style="width: 36px; height: 36px;" alt=""
+            src="${user.avatar}">
+        </a>
+        
+      `;
+      })
+      .join("");
+
+    if (likedUsersName.length >= 2) {
+      likedUsersHtml += `
+        <span> <b>${likedUsersName[0]}</b>, <b>${likedUsersName[1]}</b> 
+        and
+        <a href="#" title="">${post.likes.length - likedUsersName.length}</a>
+        liked</span>
+      `;
+    } else if (likedUsersName.length >= 1) {
+      likedUsersHtml += `
+        <span> <b>${likedUsersName[0]}</b>
+        and
+        <a href="#" title="">${post.likes.length - likedUsersName.length}</a>
+        liked</span>
+      `;
+    } else {
+      likedUsersHtml += `
+      <span>
+      <a href="#" title="">${post.likes.length - likedUsersName.length}</a>
+      liked</span>  
+    `;
+    }
+
+    console.log(likedUsersHtml);
+
     let res = `
     <div class="central-meta item">
       <div class="user-post">
@@ -9,7 +57,9 @@ class PostHelper {
         <div class="friend-info">
           <!-- Avatar author -->
           <figure>
-            <img src="${remoteUser.avatar}" alt="">
+            <img style="width: 40px; height: 40px;" src="${
+              remoteUser.avatar
+            }" alt="">
           </figure>
           <!-- Info author -->
           <div class="friend-name">
@@ -56,7 +106,8 @@ class PostHelper {
 
           </div>
     `;
-    if (post.photo != "undefined" || post.video != undefined) {
+    if (post.photo != undefined || post.video != undefined) {
+      // console.log(post.photo, post.photo == "undefined");
       res += `
         <div class="post-meta">
           <!-- Video, Photo -->
@@ -117,35 +168,7 @@ class PostHelper {
               </li>
             </ul>
             <div class="users-thumb-list">
-              <a data-toggle="tooltip" title="Anderw"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-1.jpg">
-              </a>
-              <a data-toggle="tooltip" title="frank"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-2.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Sara"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-3.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Amy"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-4.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Ema"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-5.jpg">
-              </a>
-              <span><strong>You</strong>, <b>Sarah</b>
-                and
-                <a href="#" title="">24+ more</a>
-                liked</span>
+              ${likedUsersHtml}
             </div>
           </div>
         </div>
@@ -202,31 +225,8 @@ class PostHelper {
             </li>
           </ul>
             <div class="users-thumb-list">
-              <a data-toggle="tooltip" title="Anderw"
-                href="#">
-                <img alt=""
-                  src="/images/resources/userlist-1.jpg">
-              </a>
-              <a data-toggle="tooltip" title="frank" href="#">
-                <img alt=""
-                  src="/images/resources/userlist-2.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Sara" href="#">
-                <img alt=""
-                  src="/images/resources/userlist-3.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Amy" href="#">
-                <img alt=""
-                  src="/images/resources/userlist-4.jpg">
-              </a>
-              <a data-toggle="tooltip" title="Ema" href="#">
-                <img alt=""
-                  src="/images/resources/userlist-5.jpg">
-              </a>
-              <span><strong>You</strong>, <b>Sarah</b>
-                and
-                <a href="#" title="">24+ more</a>
-                liked</span>
+              ${likedUsersHtml}
+
             </div>
           </div>
         </div>

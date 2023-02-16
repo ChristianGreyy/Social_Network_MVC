@@ -5,19 +5,23 @@ exports.viewGetRemoteUser = async (req, res, next) => {
   let user = await User.findOne({ slug: req.params.slug }).select(
     "-password -isEmailVerified -role -__v"
   );
+
+  // console.log("PATH", req.path);
+
   if (!user) {
     user = req.user;
   }
+  // console.log("remoteUser:", user);
 
   const posts = await Post.find({ author: user._id });
   user._doc.postsNumber = posts.length;
   user._doc.id = user._id;
   req.remoteUser = user._doc;
-  next();
+  return next();
 };
 
 exports.viewGetLikesTotal = async (req, res, next) => {
-  const posts = await Post.find({ author: req.user.id })
+  const posts = await Post.find({ author: req.remoteUser.id })
     .populate("likes")
     .sort({
       createdAt: -1,
@@ -30,14 +34,23 @@ exports.viewGetLikesTotal = async (req, res, next) => {
       if (
         likedUsers.findIndex((user) => {
           return user._id.toString() == likedUser._id.toString();
-        }) == -1 &&
-        likedUser._id != req.user.id
-      )
-        likedUsers.push(likedUser);
+        }) == -1
+      ) {
+        // user is author and user is like user'post
+        if (
+          !(
+            post.author.toString() == req.user.id.toString() &&
+            likedUser._id == req.user.id
+          )
+        ) {
+          likedUsers.push(likedUser);
+        }
+      }
     });
 
     return result;
   }, 0);
+  console.log(likedUsers);
   req.likesTotal = likesTotal;
   req.likedUsers = likedUsers;
 

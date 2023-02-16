@@ -270,7 +270,7 @@ class PostEvent {
     let response;
     if (remoteUser) {
       response = await fetch(
-        `/api/v1/posts?author=${remoteUser._id}&sortBy=createdAt:desc&populateFk=comments.post`,
+        `/api/v1/posts?author=${remoteUser._id}&sortBy=createdAt:desc&populateFk=comments.post&populatePk=users.likes`,
         {
           method: "GET",
           headers: {
@@ -297,6 +297,7 @@ class PostEvent {
       post.id = post._id;
       return post;
     });
+    POSTS = [...posts];
 
     const postHelper = new PostHelper();
 
@@ -306,8 +307,6 @@ class PostEvent {
       }
       return postHelper.solveRenderHTMLPost(post, remoteUser, user);
     });
-
-    // console.log(html.join(""));
 
     document.querySelector(".loadMore").innerHTML = html.join("");
 

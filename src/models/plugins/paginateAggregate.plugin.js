@@ -57,14 +57,17 @@ const paginate = (schema) => {
       { $skip: skip },
       { $limit: limit },
     ];
+
+    console.log("populate", options.populatePk);
+
     if (options.populateFk) {
       options.populateFk.split(",").forEach((populateOption) => {
         const [collection, field] = populateOption.split(".");
         queryArray.push({
           $lookup: {
             from: collection,
-            localField: "_id",
-            foreignField: field,
+            localField: "_id" /* field when store in this's collection */,
+            foreignField: field /* field when store in from's collection */,
             as: collection,
           },
         });
@@ -74,11 +77,12 @@ const paginate = (schema) => {
     if (options.populatePk) {
       options.populatePk.split(",").forEach((populateOption) => {
         const [collection, field] = populateOption.split(".");
+        console.log(collection, field);
         queryArray.push({
           $lookup: {
             from: collection,
-            localField: field,
-            foreignField: "_id",
+            localField: field /* field when store in this's collection */,
+            foreignField: "_id" /* field when store in from's collection */,
             as: field,
           },
         });

@@ -14,7 +14,8 @@ const about = catchAsync(async (req, res) => {
 });
 
 const timeline = catchAsync(async (req, res) => {
-  res.render("timeline", {
+  console.log("'PATHHHH'", req.path);
+  return res.render("timeline", {
     remoteUser: req.remoteUser,
     heading: "Timeline",
     title: req.remoteUser.firstName + " " + req.remoteUser.lastName,

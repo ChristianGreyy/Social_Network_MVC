@@ -5,7 +5,9 @@ class CommentHelper {
         return `
         <li>
           <div class="comet-avatar">
-            <img src="${comment.author.avatar}"
+            <img style="width: 36px; height: 36px;" src="${
+              comment.author.avatar
+            }"
               alt="">
           </div>
           <div class="we-comment">

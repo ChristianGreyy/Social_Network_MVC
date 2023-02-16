@@ -43,7 +43,7 @@ const updateUser = {
       background: Joi.string(),
       friends: Joi.array(),
       followers: Joi.array(),
-      following: Joi.array(),
+      followings: Joi.array(),
       createdAt: Joi.string(),
       firstName: Joi.string(),
       lastName: Joi.string(),

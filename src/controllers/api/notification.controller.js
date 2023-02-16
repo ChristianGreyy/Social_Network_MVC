@@ -13,7 +13,7 @@ const createNotification = catchAsync(async (req, res) => {
 
 const getNotifications = catchAsync(async (req, res) => {
   console.log(req.query);
-  const filter = pick(req.query, ["post"]);
+  const filter = pick(req.query, ["post", "receiver"]);
   const options = pick(req.query, ["sortBy", "limit", "page", "populatePk"]);
   const result = await notificationService.queryNotifications(filter, options);
   res.send(result);
@@ -30,6 +30,8 @@ const getNotification = catchAsync(async (req, res) => {
 });
 
 const updateNotification = catchAsync(async (req, res) => {
+  console.log(req.body);
+
   const notification = await notificationService.updateNotificationById(
     req.params.notificationId,
     req.body

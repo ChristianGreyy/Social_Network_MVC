@@ -8,6 +8,11 @@ const {
 
 const router = express.Router();
 
-router.get("/:postId", viewGetLikesTotal, postController.postDetail);
+router.get(
+  "/:postId",
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+  postController.postDetail
+);
 
 module.exports = router;

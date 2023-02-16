@@ -8,7 +8,7 @@ socket.off("getComments").on("getComments", (comment) => {
   );
   var parent = $(userPost).find(".showmore").parent("li");
   console.log(parent);
-  var comment_HTML = `<li><div class="comet-avatar"><img alt="" src="${
+  var comment_HTML = `<li><div class="comet-avatar"><img style="width: 36px; height: 36px;" alt="" src="${
     user.avatar
   }"></div><div class="we-comment"><h5><a title="" href="time-line.html">${user.firstName.concat(
     " " + user.lastName
@@ -174,4 +174,87 @@ socket.on("getNewMessage", async (newMessage) => {
 
   const messageEvent = new MessageEvent();
   messageEvent.handleActiveMessage();
+});
+
+// USER
+
+socket.on("addNewFriendRequest", async ({ user, strangerLength }) => {
+  // in timeline
+  if (window.location.href.includes(`/user/${user.slug}`) != -1) {
+    $(".profile-controls").html(`
+      <li class="add-tofrndlist add-tofrndlist-add-remove add-tofrndlist-add">
+        <a href="#" title="Chấp nhận lời mời kết bạn" data-toggle="tooltip">
+            <i class="fa fa-heart"></i>
+        </a>
+      </li>
+      <li class="add-tofrndlist add-tofrndlist-add-remove add-tofrndlist-remove">
+          <a href=" #" title="Hủy lời mời kết bạn"><i class="fa fa-trash"></i></a>
+      </li>
+      <li><a href="#" title="Follow" data-toggle="tooltip"><i
+      class="fa fa-star"></i></a>
+      </li>
+      <li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i
+            class="fa fa-comment"></i></a>
+      </li>
+    `);
+  }
+  // In dropdown
+  $(".friend-requests-item").find("a.friend-requests-item-href").html(`
+      <i class="fa fa-user"></i>
+      <em class="bg-red">
+        ${strangerLength}
+      </em>
+  `);
+
+  const userEvent = new UserEvent();
+  userEvent.handleAddFriend();
+});
+
+socket.on("addNewFriend", async ({ user, remoteUserNotiLength }) => {
+  // in timeline
+  if (window.location.href.includes(`/user/${user.slug}`) != -1) {
+    $(".profile-controls").html(`
+      <li class="friend">
+          <a title="Bạn bè" data-toggle="tooltip">
+              <i class="fa fa-user"></i>
+          </a>
+      </li>
+      <li class="add-tofrndlist add-tofrndlist-remove-friend">
+          <a href="#" title="Hủy kết bạn" data-toggle="tooltip">
+              <i class="fa fa-trash"></i>
+          </a>
+      </li>
+      <li><a href="#" title="Follow" data-toggle="tooltip"><i
+      class="fa fa-star"></i></a>
+      </li>
+      <li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i
+            class="fa fa-comment"></i></a>
+      </li>
+    `);
+  }
+  // In dropdown
+  $(".notification-item").find("a.notification-item-href").html(`
+    <i class="fa fa-bell"></i>
+    <em class="bg-purple">
+      ${remoteUserNotiLength}
+    </em>
+  `);
+});
+
+socket.on("removeFriendRequestOrFriend", async ({ user }) => {
+  if (window.location.href.includes(`/user/${user.slug}`) != -1) {
+    $(".profile-controls").html(`
+    <li class="add-tofrndlist">
+      <a href="#" title="" data-toggle="tooltip" data-original-title="Gủi lời mời kết bạn">
+        <i class="fa fa-user-plus"></i>
+      </a>
+    </li>
+    <li><a href="#" title="Follow" data-toggle="tooltip"><i
+      class="fa fa-star"></i></a>
+    </li>
+    <li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i
+          class="fa fa-comment"></i></a>
+    </li>
+    `);
+  }
 });

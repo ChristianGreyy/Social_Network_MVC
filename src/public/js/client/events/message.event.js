@@ -168,7 +168,7 @@ class MessageEvent {
     }
   }
 
-  async handleSubmitMessage(messenger) {
+  async handleSubmitMessage(messenger, page) {
     // use emojies
     $(".emojies-list")
       .find("li")
@@ -401,46 +401,79 @@ class MessageEvent {
           `);
             e.target.value = "";
           }
-          let bonusHtml = `
-            <li class="me">
-              <figure>
-              <a href="/user/${user.slug}">
-              <img style="width: 25px; height: 25px;" src="${
-                user.avatar
-              }" alt="">
-              </a>
+          if (page == "messenger") {
+            let bonusHtml = `
+              <li class="me">
+                <figure>
+                <a href="/user/${user.slug}">
+                <img style="width: 25px; height: 25px;" src="${
+                  user.avatar
+                }" alt="">
+                </a>
+  
+                </figure>
+                <div class="text-box">
+                    ${contentElement}
+                    <span><i class="ti-check"></i><i class="ti-check"></i>
+                        ${moment(message.updatedAt).from()}</span>
+                </div>
+            </li>
+            `;
 
-              </figure>
-              <div class="text-box">
-                  ${contentElement}
-                  <span><i class="ti-check"></i><i class="ti-check"></i>
-                      ${moment(message.updatedAt).from()}</span>
-              </div>
-          </li>
-          `;
+            // Solve add messenger messsage
+            $(".conversations").html($(".conversations").html() + bonusHtml);
 
-          // Solve add messenger messsage
-          $(".conversations").html($(".conversations").html() + bonusHtml);
+            // Solve user chat list
+            const userSlug =
+              window.location.href.split("/")[
+                window.location.href.split("/").length - 1
+              ];
 
-          // Solve user chat list
-          const userSlug =
-            window.location.href.split("/")[
-              window.location.href.split("/").length - 1
-            ];
-
-          const navItem = document.querySelectorAll(".nav-item");
-          for (let i in navItem) {
-            if (isElement(navItem[i])) {
-              console.log(navItem[i]);
-              const aElement = navItem[i].querySelector("a");
-              let slugElement = aElement.className;
-              if (slugElement.includes(userSlug)) {
-                navItem[i].innerHTML = messageHelper.htmlUserChatList(
-                  message,
-                  userOnlineData
-                );
+            const navItem = document.querySelectorAll(".nav-item");
+            for (let i in navItem) {
+              if (isElement(navItem[i])) {
+                console.log(navItem[i]);
+                const aElement = navItem[i].querySelector("a");
+                let slugElement = aElement.className;
+                if (slugElement.includes(userSlug)) {
+                  navItem[i].innerHTML = messageHelper.htmlUserChatList(
+                    message,
+                    userOnlineData
+                  );
+                }
               }
             }
+            // set scroll bar is bottom
+            var messageBody = document.querySelector(".conversations");
+            messageBody.scrollTop =
+              messageBody.scrollHeight - messageBody.clientHeight;
+          } else if (page == "index") {
+            let bonusHtml = `
+              <li class="me">
+                <div style="float: right; margin-left: 4px;"
+                }" class="chat-thumb"><img style="width: 25px; height: 25px;" src="${
+                  user.avatar
+                }" alt="">
+                </div>
+                <div class="notification-event">
+                  <span class="chat-message-item">
+                    ${contentElement}
+                  </span>
+                  <span class="notification-date">${moment(
+                    message.updatedAt
+                  ).from()}</span>
+                </div>
+              </li>
+            `;
+
+            $(".conversations-index").html(
+              $(".conversations-index").html() + bonusHtml
+            );
+
+            // set scroll bar is bottom
+            var messageBody = document.querySelector(".conversations-index");
+            messageBody.scrollTop =
+              messageBody.scrollHeight - messageBody.clientHeight;
           }
 
           // set typing
@@ -454,11 +487,6 @@ class MessageEvent {
               }
               console.log("typing...");
             });
-
-          // set scroll bar is bottom
-          var messageBody = document.querySelector(".conversations");
-          messageBody.scrollTop =
-            messageBody.scrollHeight - messageBody.clientHeight;
 
           const messageEvent = new MessageEvent();
           messageEvent.handleActiveMessage();

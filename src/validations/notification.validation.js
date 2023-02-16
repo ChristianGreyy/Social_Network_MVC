@@ -29,13 +29,11 @@ const getNotification = {
 
 const updateNotification = {
   params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
+    notificationId: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string(),
+      read: Joi.boolean(),
     })
     .min(1),
 };

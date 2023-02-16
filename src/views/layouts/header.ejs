@@ -22,7 +22,7 @@
         <ul class="setting-area">
             <li><a href="/" title="Home" data-ripple=""><i class="fa fa-home"></i></a></li>
             <li class="friend-requests-item">
-                <a href="#" title="Friend Requests" data-ripple="">
+                <a class="friend-requests-item-href" href="#" title="Friend Requests" data-ripple="">
                     <i class="fa fa-user"></i>
                     <% if(user.friends.filter(friend=> friend.status == 'stranger').length > 0) { %>
                         <em class="bg-red">
@@ -31,9 +31,8 @@
                         <% } %>
                 </a>
                 <div class="dropdowns">
-                    <span>
-                        <%= user.friends.filter(friend=> friend.status == 'stranger').length %> New Requests <a href="#"
-                                title="">View all Requests</a>
+                    <span class="friend-requests-item-number">
+                        0 New Requests <a href="#" title="">View all Requests</a>
                     </span>
                     <ul class="drops-menu">
                         <!-- Data render here -->
@@ -42,7 +41,7 @@
                 </div>
             </li>
             <li class="notification-item">
-                <a href="#" title="Notification" data-ripple="">
+                <a class="notification-item-href" href="#" title="Notification" data-ripple="">
                     <i class="fa fa-bell"></i>
                     <% if(unReadNotiNumber>0) { %>
                         <em class="bg-purple">
@@ -51,8 +50,8 @@
                         <% } %>
                 </a>
                 <div class="dropdowns">
-                    <span>
-                        <%= unReadNotiNumber %> New Notifications <a href="#" title="">Mark all as read</a>
+                    <span class="notification-item-number">
+                        0 New Notifications <a href="#" title="">Mark all as read</a>
                     </span>
                     <ul class="drops-menu">
 
@@ -72,11 +71,11 @@
                             <% } %>
                     </a>
                     <div class="dropdowns">
-                        <span>
-                            <%= unReadNumber %> New Messages <a href="#" title="">Mark all as read</a>
+                        <span class="message-item-number">
+                            0 New Messages <a href="#" title="">Mark all as read</a>
                         </span>
-                        <ul class="drops-menu">
-
+                        <ul class="drops-menu msg-pepl-list">
+                            <!-- render message here -->
                         </ul>
                         <a href="chat-messenger.html" title="" class="more-mesg">View All</a>
                     </div>

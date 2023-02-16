@@ -1,5 +1,6 @@
 <script>
     const user = JSON.parse('<%- JSON.stringify(user) %>');
+    let POSTS;
 </script>
 <script src="/js/main.min.js"></script>
 <script src="/js/script.js"></script>
@@ -37,9 +38,20 @@
                 o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
         );
     }
-    var socket = io('http://localhost:8080');
-    socket.emit("addOnlineUser", user);
+    if (!window.location.href.includes('auth')) {
+        var socket = io('http://localhost:8080');
+        socket.emit("addOnlineUser", user);
+    }
+
+
     const userEvent = new UserEvent();
     userEvent.handleRenderNotifications()
+
+
+
+    // Render, Update unread messge
+    // const messgeEvent = new MessageEvent();
+    // messgeEvent.handleRenderMessagerMessage()
+
 </script>
 <script src="/js/client/events/socket.event.js"></script>

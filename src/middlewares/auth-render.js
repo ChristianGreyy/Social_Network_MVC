@@ -20,7 +20,6 @@ exports.authRender = catchAsync(async (req, res, next) => {
   // Check token doc is in client?
   if (!token) {
     return res.redirect("/auth/login");
-    // return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
   }
   let payload;
   try {

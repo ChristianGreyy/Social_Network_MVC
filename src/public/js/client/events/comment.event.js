@@ -7,6 +7,8 @@ class CommentEvent {
         const cookieHelper = new CookieHelper();
         const token = cookieHelper.getCookie("jwt");
 
+        const post = POSTS.find((post) => post.id == postId);
+
         const response = await fetch("/api/v1/comments", {
           method: "POST",
           headers: {
@@ -19,6 +21,25 @@ class CommentEvent {
             post: postId,
           }),
         });
+
+        if (response.status == 201) {
+          // Create notificaiton
+          if (post.author[0]._id != user.id) {
+            const response = await fetch("/api/v1/notifications", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify({
+                sender: user.id,
+                receiver: post.author[0]._id,
+                post: postId,
+                type: "comment",
+              }),
+            });
+          }
+        }
       }
     });
   }
@@ -63,7 +84,7 @@ class CommentEvent {
         </li>
         <li class="post-comment">
           <div class="comet-avatar">
-            <img src="/images/resources/nearly1.jpg"
+            <img style="width: 36px; height: 36px;" src="/images/resources/nearly1.jpg"
               alt="">
           </div>
           <div class="post-comt-box">

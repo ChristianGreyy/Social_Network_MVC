@@ -180,7 +180,9 @@ class MessageHelper {
         <li class="${senderClass}">
           <div style="float: right; ${
             senderClass == "me" ? "margin-left: 4px;" : "margin-right: 4px;"
-          }" class="chat-thumb"><img src="${message.sender[0].avatar}" alt="">
+          }" class="chat-thumb"><img style="width: 25px; height: 25px;" src="${
+        message.sender[0].avatar
+      }" alt="">
           </div>
           <div class="notification-event">
             <span class="chat-message-item">
