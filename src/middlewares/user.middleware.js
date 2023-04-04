@@ -5,14 +5,9 @@ exports.viewGetRemoteUser = async (req, res, next) => {
   let user = await User.findOne({ slug: req.params.slug }).select(
     "-password -isEmailVerified -role -__v"
   );
-
-  // console.log("PATH", req.path);
-
   if (!user) {
     user = req.user;
   }
-  // console.log("remoteUser:", user);
-
   const posts = await Post.find({ author: user._id });
   user._doc.postsNumber = posts.length;
   user._doc.id = user._id;
@@ -36,7 +31,6 @@ exports.viewGetLikesTotal = async (req, res, next) => {
           return user._id.toString() == likedUser._id.toString();
         }) == -1
       ) {
-        // user is author and user is like user'post
         if (
           !(
             post.author.toString() == req.user.id.toString() &&
@@ -79,7 +73,6 @@ exports.apiGetfriend = async (req, res, next) => {
 
 exports.apiGetOnlinefriend = async (req, res, next) => {
   const userOnline = socket.getOnlineUser();
-  // console.log(userOnline);
   if (req.query.status == "onlineFriend") {
     const userIdArray = req.user.friends.map((friend) => {
       if (
@@ -88,7 +81,6 @@ exports.apiGetOnlinefriend = async (req, res, next) => {
       )
         return friend.user;
     });
-    // console.log(userIdArray);
     req.query._id = userIdArray;
   }
   next();
