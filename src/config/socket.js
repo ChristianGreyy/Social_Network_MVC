@@ -9,18 +9,14 @@ let onlineUsers = [];
 module.exports = {
   init: (app) => {
     const httpServer = createServer(app);
-
     io = new Server(httpServer, {
       cors: {
         origin: "https://localhost:8080",
         credentials: true,
       },
     });
-
     io.on("connection", (socket) => {
       console.log("user connection");
-      // console.log("online user: " + onlineUsers);
-
       socket.on("addOnlineUser", (user) => {
         const index = onlineUsers.findIndex(
           (onlineUser) => onlineUser.userId == user.id
