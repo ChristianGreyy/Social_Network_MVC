@@ -76,7 +76,7 @@ const updateNotificationById = async (userId, updateBody) => {
 const deleteNotificationById = async (userId) => {
   const user = await getNotificationById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Notification not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Notification not found!");
   }
   await user.remove();
   return user;

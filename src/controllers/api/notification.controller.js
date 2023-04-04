@@ -24,7 +24,7 @@ const getNotification = catchAsync(async (req, res) => {
     req.params.notificationId
   );
   if (!notification) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Notification not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Notification not found!");
   }
   res.send(notification);
 });
