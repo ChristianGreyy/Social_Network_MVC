@@ -9,10 +9,31 @@ const {
 const router = express.Router();
 
 router.get(
+  "/general-setting",
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+  settingController.generalSetting
+);
+
+router.get(
   "/edit-profile",
   viewGetRemoteUser,
   viewGetLikesTotal,
   settingController.editProfile
+);
+
+router.get(
+  "/notification",
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+  settingController.notification
+);
+
+router.get(
+  "/messages",
+  viewGetRemoteUser,
+  viewGetLikesTotal,
+  settingController.messages
 );
 
 module.exports = router;

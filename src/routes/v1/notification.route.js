@@ -5,7 +5,6 @@ const notificationValidation = require("../../validations/notification.validatio
 const notificationController = require("../../controllers/api/notification.controller");
 
 const router = express.Router();
-
 router
   .route("/")
   .post(

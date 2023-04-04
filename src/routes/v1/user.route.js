@@ -12,7 +12,6 @@ const {
 const upload = require("../../config/multer");
 
 const router = express.Router();
-
 router
   .route("/")
   .post(
@@ -20,24 +19,12 @@ router
     validate(userValidation.createUser),
     userController.createUser
   )
-  .get(
-    auth(),
-    validate(userValidation.getUsers),
-    apiGetRequestfriend,
-    apiGetfriend,
-    apiGetOnlinefriend,
-    userController.getUsers
-  );
+  .get(userController.getUsers);
 
 router
   .route("/:userId")
-  .get(
-    // auth("getUsers"),
-    validate(userValidation.getUser),
-    userController.getUser
-  )
+  .get(validate(userValidation.getUser), userController.getUser)
   .patch(
-    // auth("manageUsers"),
     auth(),
     upload.single("file"),
     validate(userValidation.updateUser),

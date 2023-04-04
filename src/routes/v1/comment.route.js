@@ -5,7 +5,6 @@ const commentValidation = require("../../validations/comment.validation");
 const commentController = require("../../controllers/api/comment.controller");
 
 const router = express.Router();
-
 router
   .route("/")
   .post(
@@ -21,18 +20,12 @@ router
 
 router
   .route("/:commentId")
-  .get(
-    // auth("getComments"),
-    validate(commentValidation.getComment),
-    commentController.getComment
-  )
+  .get(validate(commentValidation.getComment), commentController.getComment)
   .patch(
-    // auth("manageComments"),
     validate(commentValidation.updateComment),
     commentController.updateComment
   )
   .delete(
-    // auth("manageComments"),
     validate(commentValidation.deleteComment),
     commentController.deleteComment
   );

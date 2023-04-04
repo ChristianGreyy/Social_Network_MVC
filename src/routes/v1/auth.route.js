@@ -35,7 +35,6 @@ router.post(
 );
 
 module.exports = router;
-
 /**
  * @swagger
  * tags:

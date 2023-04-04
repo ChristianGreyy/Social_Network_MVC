@@ -6,15 +6,9 @@ const postController = require("../../controllers/api/post.controller");
 const upload = require("../../config/multer");
 const router = express.Router();
 const { getFriendId } = require("../../middlewares/post.middleware");
-
 router
   .route("/")
-  .post(
-    auth(),
-    // validate(postValidation.createPost),
-    upload.single("file"),
-    postController.createPost
-  )
+  .post(auth(), upload.single("file"), postController.createPost)
   .get(
     auth("getPosts"),
     validate(postValidation.getPosts),
@@ -24,21 +18,9 @@ router
 
 router
   .route("/:postId")
-  .get(
-    // auth("getPosts"),
-    validate(postValidation.getPost),
-    postController.getPost
-  )
-  .patch(
-    // auth("managePosts"),
-    validate(postValidation.updatePost),
-    postController.updatePost
-  )
-  .delete(
-    // auth("managePosts"),
-    validate(postValidation.deletePost),
-    postController.deletePost
-  );
+  .get(validate(postValidation.getPost), postController.getPost)
+  .patch(validate(postValidation.updatePost), postController.updatePost)
+  .delete(validate(postValidation.deletePost), postController.deletePost);
 
 module.exports = router;
 

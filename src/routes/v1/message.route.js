@@ -42,7 +42,6 @@ router
   );
 
 module.exports = router;
-
 /**
  * @swagger
  * tags:
