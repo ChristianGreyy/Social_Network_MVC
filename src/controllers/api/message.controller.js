@@ -48,7 +48,7 @@ const getMessages = catchAsync(async (req, res) => {
 const getMessage = catchAsync(async (req, res) => {
   const message = await messageService.getMessageById(req.params.messageId);
   if (!message) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Message not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Message not found!");
   }
   res.send(message);
 });

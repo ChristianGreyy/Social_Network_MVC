@@ -61,12 +61,6 @@ const updateMessageById = async (messsageId, updateBody) => {
   if (!messsage) {
     throw new ApiError(httpStatus.NOT_FOUND, "Message not found");
   }
-  // if (
-  //   updateBody.email &&
-  //   (await Message.isEmailTaken(updateBody.email, messsageId))
-  // ) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-  // }
   Object.assign(messsage, updateBody);
   let updatedMessage = await messsage.save();
 
