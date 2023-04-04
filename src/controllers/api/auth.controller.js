@@ -9,23 +9,17 @@ const {
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  // const tokens = await tokenService.generateAuthTokens(user);
   res.status(httpStatus.CREATED).send({ user });
 });
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  // must user res.json, don't use document.cookie = 'name=value'
-  // console.log(req.cookies);
-  // console.log(req.signedCookies);
-
   const user = await authService.loginUserWithEmailAndPassword(
     email,
     password,
     req,
     res
   );
-  // const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user });
 });
 
