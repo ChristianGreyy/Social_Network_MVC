@@ -6,4 +6,4 @@ module.exports.postService = require("./post.service");
 module.exports.commentService = require("./comment.service");
 module.exports.messageService = require("./message.service");
 module.exports.documentService = require("./document.service");
-module.exports.notificationService = require("./notification.service");
+module.exports.notificationService = require("./notification.service.js");
