@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { User, Notification } = require("../models");
+const { User, Notification, Post } = require("../models");
 
 exports.viewGetUnreadNotificationNumber = async (req, res, next) => {
   if (req.path.includes("auth")) return next();

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { User, Message } = require("../models");
+const { User, Message, Post } = require("../models");
 
 exports.apiGetFriendMessage = async (req, res, next) => {
   if (req.query.friend) {
