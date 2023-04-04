@@ -1,4 +1,4 @@
-const { Post } = require("../models");
+const { Post, User } = require("../models");
 
 exports.getFriendId = (req, res, next) => {
   if (!req.query.author) {
