@@ -76,7 +76,7 @@ const updateCommentById = async (userId, updateBody) => {
 const deleteCommentById = async (userId) => {
   const user = await getCommentById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Comment not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Comment not found!");
   }
   await user.remove();
   return user;

@@ -23,7 +23,7 @@ const getComments = catchAsync(async (req, res) => {
 const getComment = catchAsync(async (req, res) => {
   const comment = await commentService.getCommentById(req.params.commentId);
   if (!comment) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Comment not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Comment not found!");
   }
   res.send(comment);
 });
