@@ -7,10 +7,6 @@ const socket = require("../../config/socket");
 
 const createPost = catchAsync(async (req, res) => {
   if (req.file) {
-    // req.body["photo"] = "/resources/photos/".concat(
-    //   req.file.path.split("/")[req.file.path.split("/").length - 1]
-    // );
-
     req.body[req.storeFile] = `/resources/${req.storeFile + "s"}/`.concat(
       req.file.path.split("/")[req.file.path.split("/").length - 1]
     );
@@ -18,7 +14,6 @@ const createPost = catchAsync(async (req, res) => {
   req.body["author"] = req.user._id;
   const post = await postService.createPost(req.body);
   const userOnline = socket.getOnlineUser();
-  // console.log(req.user.friends);
   req.user.friends.push({
     user: req.user.id,
   });

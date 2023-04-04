@@ -81,7 +81,7 @@ const updatePostById = async (postId, updateBody) => {
 const deletePostById = async (userId) => {
   const user = await getPostById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Post not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Post not found!");
   }
   await user.remove();
   return user;
