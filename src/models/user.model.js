@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema(
           );
         }
       },
-      private: true, // used by the toJSON plugin
+      private: true,
     },
     introduction: {
       type: String,

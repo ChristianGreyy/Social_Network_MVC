@@ -28,7 +28,6 @@ const documentSchema = mongoose.Schema(
   }
 );
 
-// add plugin that converts mongoose to json
 documentSchema.plugin(toJSON);
 documentSchema.plugin(paginate);
 
