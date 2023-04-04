@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const { toJSON, paginate, paginateAggregrate } = require("./plugins");
 
 const { roles } = require("../config/roles");
-
 const notificationSchema = mongoose.Schema(
   {
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
