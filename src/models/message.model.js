@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const { toJSON, paginate, paginateAggregrate } = require("./plugins");
 
 const { roles } = require("../config/roles");
-
 const messageSchema = mongoose.Schema(
   {
     roomId: { type: mongoose.Schema.Types.ObjectId },
