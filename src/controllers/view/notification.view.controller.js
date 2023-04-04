@@ -7,9 +7,6 @@ const notificationsDetail = catchAsync(async (req, res) => {
     receiver: req.user.id,
   }).populate("sender");
 
-  console.log(req.user);
-  console.log(req.remoteUser);
-
   res.render("notifications", {
     remoteUser: req.remoteUser,
     user: req.user,

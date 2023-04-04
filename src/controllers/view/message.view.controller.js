@@ -5,7 +5,6 @@ const { User } = require("../../models");
 const messenger = catchAsync(async (req, res) => {
   const { userSlug } = req.params;
   const messenger = await User.findOne({ slug: userSlug });
-  console.log(messenger);
   res.render("chat-messenger", {
     title: "Messenger",
     heading: "NEWSFEED",
