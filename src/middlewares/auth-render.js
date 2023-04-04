@@ -45,7 +45,6 @@ exports.authRender = catchAsync(async (req, res, next) => {
   );
   // Check user exists?
   if (!currentUser) {
-    // return next(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
     return res.redirect("/auth/login");
   }
 
