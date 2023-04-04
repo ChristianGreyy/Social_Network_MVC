@@ -9,7 +9,6 @@ const createNotification = {
     belong: Joi.string().custom(objectId),
   }),
 };
-
 const getNotifications = {
   query: Joi.object().keys({
     post: Joi.string().custom(objectId),

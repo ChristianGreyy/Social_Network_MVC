@@ -9,7 +9,6 @@ const createComment = {
     belong: Joi.string().custom(objectId),
   }),
 };
-
 const getComments = {
   query: Joi.object().keys({
     post: Joi.string().custom(objectId),

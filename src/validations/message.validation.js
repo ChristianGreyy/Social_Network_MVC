@@ -10,7 +10,6 @@ const createMessage = {
     receiver: Joi.string().custom(objectId).required(),
   }),
 };
-
 const getMessages = {
   query: Joi.object().keys({
     sender: Joi.string().custom(objectId),

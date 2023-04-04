@@ -11,7 +11,6 @@ const createPost = {
     })
     .min(1),
 };
-
 const getPosts = {
   query: Joi.object().keys({
     _id: Joi.custom(objectId),

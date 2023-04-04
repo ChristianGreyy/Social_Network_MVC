@@ -50,7 +50,6 @@ const verifyEmail = {
     token: Joi.string().required(),
   }),
 };
-
 module.exports = {
   register,
   login,

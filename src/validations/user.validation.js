@@ -9,7 +9,6 @@ const createUser = {
     role: Joi.string().required().valid("user", "admin"),
   }),
 };
-
 const getUsers = {
   query: Joi.object().keys({
     name: Joi.string(),
