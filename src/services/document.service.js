@@ -76,7 +76,7 @@ const updateDocumentById = async (userId, updateBody) => {
 const deleteDocumentById = async (userId) => {
   const user = await getDocumentById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Document not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Document not found!");
   }
   await user.remove();
   return user;

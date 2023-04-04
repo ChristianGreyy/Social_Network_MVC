@@ -19,7 +19,7 @@ const getDocuments = catchAsync(async (req, res) => {
 const getDocument = catchAsync(async (req, res) => {
   const document = await documentService.getDocumentById(req.params.documentId);
   if (!document) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Document not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Document not found !");
   }
   res.send(document);
 });
