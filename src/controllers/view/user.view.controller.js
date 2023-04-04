@@ -1,5 +1,3 @@
-const httpStatus = require("http-status");
-const { User } = require("../../models");
 const catchAsync = require("../../utils/catchAsync");
 
 const about = catchAsync(async (req, res) => {

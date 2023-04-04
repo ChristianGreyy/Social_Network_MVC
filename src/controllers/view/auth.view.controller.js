@@ -1,4 +1,3 @@
-const httpStatus = require("http-status");
 const catchAsync = require("../../utils/catchAsync");
 
 const login = catchAsync(async (req, res) => {

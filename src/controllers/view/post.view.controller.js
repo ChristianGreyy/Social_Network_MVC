@@ -4,7 +4,6 @@ const catchAsync = require("../../utils/catchAsync");
 
 const postDetail = catchAsync(async (req, res) => {
   const post = await Post.findOne({ _id: req.params.postId });
-  console.log(post);
   res.render("post", {
     remoteUser: req.remoteUser,
     heading: "Timeline",
